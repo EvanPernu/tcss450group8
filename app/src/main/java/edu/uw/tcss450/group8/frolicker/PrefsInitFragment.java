@@ -1,7 +1,6 @@
 package edu.uw.tcss450.group8.frolicker;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -12,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -29,7 +27,6 @@ public class PrefsInitFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
     private PrefsInitAdapter mPrefsInitAdapter;
     private RecyclerView mPrefsInitRecyclerView;
-    private LinearLayoutManager mLinearLayoutManager;
 
     /** The list of event categories the user will be asked about*/
     private final String[] DEFAULT_PREFS = {"Comedy", "Sports", "Music", "Fair",
