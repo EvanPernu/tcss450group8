@@ -126,4 +126,14 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
             }
         return res;
     }
+    
+    public void loadEventSearchResultFragment(List<Event> eventList) {
+        
+        EventSearchResultFragment eventSearchResultFragment = new EventSearchResultFragment();
+        eventSearchResultFragment.setEventList(eventList);
+        eventSearchResultFragment.setRetainInstance(true);
+       
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, eventSearchResultFragment
+        ).addToBackStack(null).commit(); 
+    }
 }
