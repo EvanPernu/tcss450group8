@@ -127,6 +127,7 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
         return res;
     }
     
+    // called when user clicks search button 
     public void loadEventSearchResultFragment(List<Event> eventList) {
         
         EventSearchResultFragment eventSearchResultFragment = new EventSearchResultFragment();
