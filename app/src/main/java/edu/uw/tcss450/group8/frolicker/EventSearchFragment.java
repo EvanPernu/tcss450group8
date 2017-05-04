@@ -1,4 +1,4 @@
-package groupn.tcss450.uw.edu.frolicker2;
+package edu.uw.tcss450.group8.frolicker;
 
 
 import android.app.ProgressDialog;
