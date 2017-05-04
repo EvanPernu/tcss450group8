@@ -61,7 +61,7 @@ public class PrefsInitFragment extends Fragment {
         mPrefsInitRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mPrefsInitAdapter.notifyDataSetChanged();
 
-        mListener.onPrefsInitFragmentInteraction("upload", null);
+        //mListener.onPrefsInitFragmentInteraction("upload", null);
 
         return v;
     }

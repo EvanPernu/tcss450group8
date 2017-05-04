@@ -20,9 +20,11 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import model.PrefList;
+import model.Event;
 
 public class MainActivity extends AppCompatActivity implements LoginFragment.OnFragmentInteractionListener, PrefsInitFragment.OnFragmentInteractionListener{
 
@@ -134,7 +136,7 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
         eventSearchResultFragment.setEventList(eventList);
         eventSearchResultFragment.setRetainInstance(true);
        
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, eventSearchResultFragment
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainer, eventSearchResultFragment
         ).addToBackStack(null).commit(); 
     }
 }

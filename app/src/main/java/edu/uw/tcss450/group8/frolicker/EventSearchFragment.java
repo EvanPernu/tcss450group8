@@ -27,7 +27,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import groupn.tcss450.uw.edu.frolicker2.Model.Event;
+
+import model.Event;
 
 import static android.content.ContentValues.TAG;
 

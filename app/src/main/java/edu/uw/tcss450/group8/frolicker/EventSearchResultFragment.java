@@ -12,8 +12,9 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
+import model.Event;
 
-import groupn.tcss450.uw.edu.frolicker2.Model.Event;
+
 
 
 
