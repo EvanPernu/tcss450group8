@@ -1,6 +1,5 @@
-package groupn.tcss450.uw.edu.frolicker2.Model;
-
-
+//package groupn.tcss450.uw.edu.frolicker2.Model;
+package model;
 
 import android.support.v4.app.Fragment;
 
