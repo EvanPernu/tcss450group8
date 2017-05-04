@@ -10,6 +10,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import org.json.JSONObject;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -59,6 +61,8 @@ public class PrefsInitFragment extends Fragment {
         mPrefsInitRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mPrefsInitAdapter.notifyDataSetChanged();
 
+        mListener.onPrefsInitFragmentInteraction("upload", null);
+
         return v;
     }
 
@@ -90,7 +94,7 @@ public class PrefsInitFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        void onPrefsInitFragmentInteraction(String s);
+        void onPrefsInitFragmentInteraction(String s, JSONObject theO);
     }
 
     /**
