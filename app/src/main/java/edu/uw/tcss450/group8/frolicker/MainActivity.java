@@ -121,13 +121,6 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
     }
     }
 
-    private String printStringArray(String[] args){
-        String res = "";
-            for(int i = 0; i < args.length; i++){
-                res+=args[i];
-            }
-        return res;
-    }
     
     // called when user clicks search button 
     public void loadEventSearchResultFragment(List<Event> eventList) {

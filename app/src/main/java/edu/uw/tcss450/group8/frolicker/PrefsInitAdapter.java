@@ -60,36 +60,34 @@ public class PrefsInitAdapter extends RecyclerView.Adapter<PrefsInitAdapter.Hold
 
     @Override
     public void onBindViewHolder(PrefsInitAdapter.Holder holder, int position) {
-        position = holder.getAdapterPosition();
-        holder.mName.setText(mKeyList.get(position));
+        if(position < mKeyList.size()) {
+            holder.mName.setText(mKeyList.get(position));
+        }
     }
 
     @Override
     public int getItemCount() {
-       return mMap.size();
+       return mKeyList.size();
     }
 
-    /**
-     * Removes an item from the recyclerview and updates its rating.
+     /** Removes an item from the recyclerview
+     * and updates its rating.
      *
      * @param position the position to be removed
      * @param val the rating to be assigned
      */
     public void removeItem(int position, int val, PrefsInitAdapter.Holder holder) {
-       // position = holder.getAdapterPosition();
-
         String name = mKeyList.get(position);
 
         mKeyList.remove(position);
+        Log.d("removeItem", "mKeyList.size() = "+mKeyList.size());
         mMap.remove(name);
         mMap.put(name, val);
 
-        notifyItemRemoved(holder.getAdapterPosition());
-        //notifyItemRangeChanged(position, mKeyList.size());
-        notifyDataSetChanged();
-
-
-
+        notifyItemRemoved(position);
+        notifyItemRangeChanged(position, mKeyList.size());
+       // notifyDataSetChanged();
+       // holder.itemView.setVisibility(View.GONE);
     }
 
     /**
