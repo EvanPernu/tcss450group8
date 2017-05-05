@@ -1,6 +1,16 @@
 <resources>
     <string name="app_name">Frolicker</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="to_two">"Login"</string>
+    <string name="to_three">"Register"</string>
+    <string name="to_four">"Confirm"</string>
+
+    <string name="username">"Username"</string>
+    <string name="password">"Password"</string>
+    <string name="confirm">"Confirm Password"</string>
+
+    <string name="user_key">"userKey"</string>
+    <string name="pass_key">"passKey"</string>
+
+    <string name="response">"responseKey"</string>
 </resources>

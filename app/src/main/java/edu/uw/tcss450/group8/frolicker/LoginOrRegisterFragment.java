@@ -11,27 +11,46 @@ import android.widget.Button;
 
 
 /**
- * This is where the user logs in.
+ * This fragment has a login and a register button;
+ * clicking either will take the user to the corresponding fragment.
  *
  * @author Chris Dale
  */
-public class LoginFragment extends Fragment implements View.OnClickListener {
+public class LoginOrRegisterFragment extends Fragment implements View.OnClickListener{
 
     private OnFragmentInteractionListener mListener;
 
-    public LoginFragment() {
+
+    public LoginOrRegisterFragment() {
         // Required empty public constructor
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.fragment_login, container, false);
-        Button b = (Button) v.findViewById(R.id.toFour);
+        View v = inflater.inflate(R.layout.fragment_login_or_register, container, false);
+        Button b = (Button) v.findViewById(R.id.toTwo);
+        b.setOnClickListener(this);
+        b = (Button) v.findViewById(R.id.toThree);
         b.setOnClickListener(this);
 
         return v;
+    }
+
+    @Override
+    public void onClick(View view)
+    {
+        if (mListener != null) {
+            switch (view.getId()) {
+                case R.id.toTwo:
+                    mListener.onFragmentInteraction(2);
+                    break;
+                case R.id.toThree:
+                    mListener.onFragmentInteraction(3);
+                    break;
+            }
+        }
     }
 
     @Override
@@ -49,18 +68,6 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     public void onDetach() {
         super.onDetach();
         mListener = null;
-    }
-
-    @Override
-    public void onClick(View view)
-    {
-        if (mListener != null) {
-            switch (view.getId()) {
-                case R.id.toFour:
-                    mListener.onFragmentInteraction(4);
-                    break;
-            }
-        }
     }
 
     /**

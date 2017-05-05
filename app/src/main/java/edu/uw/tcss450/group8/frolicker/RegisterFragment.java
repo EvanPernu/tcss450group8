@@ -1,6 +1,5 @@
 package edu.uw.tcss450.group8.frolicker;
 
-
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -11,15 +10,14 @@ import android.widget.Button;
 
 
 /**
- * This is where the user logs in.
+ * This is where the user registers ther username and password.
  *
  * @author Chris Dale
  */
-public class LoginFragment extends Fragment implements View.OnClickListener {
-
+public class RegisterFragment extends Fragment implements View.OnClickListener {
     private OnFragmentInteractionListener mListener;
 
-    public LoginFragment() {
+    public RegisterFragment() {
         // Required empty public constructor
     }
 
@@ -27,7 +25,8 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.fragment_login, container, false);
+        View v = inflater.inflate(R.layout.fragment_register, container, false);
+
         Button b = (Button) v.findViewById(R.id.toFour);
         b.setOnClickListener(this);
 
@@ -37,8 +36,8 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
+        if (context instanceof LoginFragment.OnFragmentInteractionListener) {
+            mListener = (RegisterFragment.OnFragmentInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
@@ -57,7 +56,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         if (mListener != null) {
             switch (view.getId()) {
                 case R.id.toFour:
-                    mListener.onFragmentInteraction(4);
+                    mListener.onFragmentInteraction(5);
                     break;
             }
         }
@@ -77,4 +76,5 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(int theFrag);
     }
+
 }
