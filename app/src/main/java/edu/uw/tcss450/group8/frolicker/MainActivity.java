@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity
     private final String DB_URL = "http://cssgate.insttech.washington.edu/~_450agrp8/";
 
     //Tracks the username of the active user
-    private String ACTIVE_USER = "Evan"; //change later
+    private String ACTIVE_USER;
 
     //The URL of login
     private static final String PARTIAL_LOGIN_URL = "http://cssgate.insttech.washington.edu/"
@@ -65,8 +65,17 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onPrefsInitFragmentInteraction(String s, String theJSString) {
         if(s.equals("upload")){
+            //upload their prefs to the server
             uploadInitPrefsTask task = new uploadInitPrefsTask();
             task.execute(ACTIVE_USER, theJSString);
+
+            Log.d("main/upload", "about to log in");
+
+            //log them in automatically
+            FragmentTransaction loginTransaction = getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragmentContainer, new EventSearchFragment())
+                    .addToBackStack(null);
+            loginTransaction.commit();
         }
     }
 
@@ -264,9 +273,11 @@ public class MainActivity extends AppCompatActivity
      * Asynctask for register
      *
      * @author Chris Dale
+     * @author Evan Pernu
      */
     private class RegisterWebServiceTask extends AsyncTask<String, Void, String> {
         private final String SERVICE = "_register.php";
+        private String mUsername;
 
         @Override
         protected String doInBackground(String... strings) {
@@ -278,6 +289,9 @@ public class MainActivity extends AppCompatActivity
             String response = "";
             HttpURLConnection urlConnection = null;
             String url = strings[0];
+
+            //set the active username it knows who to log in later
+            mUsername = strings[1];
 
             try {
                 URL urlObject = new URL(url + SERVICE);
@@ -319,14 +333,32 @@ public class MainActivity extends AppCompatActivity
                 return;
             }
 
-            //            GetSetlistFragment getSetlistFragment = new GetSetlistFragment();
-//            FragmentTransaction getSetlistTransaction = getSupportFragmentManager().beginTransaction()
-//                    .replace(R.id.fragmentContainer, getSetlistFragment)
-//                    .addToBackStack(null);
-//
-//            // Commit the transaction
-//            getSetlistTransaction.commit();
-            //wherever we wanna go
+            if(result.equals("success")){
+                //successful registration
+                Toast.makeText(getApplicationContext(), "Registration success!", Toast.LENGTH_LONG)
+                        .show();
+
+                //log the user in automatically
+                //set active user
+                ACTIVE_USER = mUsername;
+
+                //take the user to PrefsInitFragment
+                FragmentTransaction loginTransaction = getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragmentContainer, new PrefsInitFragment())
+                        .addToBackStack(null);
+
+                // Commit the transaction
+                loginTransaction.commit();
+
+            }else if(result.equals("fail")){
+                //unsuccessful registration for other (unknown/error) reasons
+                Toast.makeText(getApplicationContext(), "Registration failed. There was an error.", Toast.LENGTH_LONG)
+                        .show();
+            }else if(result.equals("taken")){
+                //unsuccessful registration, username is taken
+                Toast.makeText(getApplicationContext(), "This username is already taken :(", Toast.LENGTH_LONG)
+                        .show();
+            }
         }
     }
 
@@ -338,6 +370,7 @@ public class MainActivity extends AppCompatActivity
      */
     private class LoginWebServiceTask extends AsyncTask<String, Void, String> {
         private final String SERVICE = "_login.php";
+        private String mUsername;
 
         @Override
         protected String doInBackground(String... strings) {
@@ -349,6 +382,9 @@ public class MainActivity extends AppCompatActivity
             String response = "";
             HttpURLConnection urlConnection = null;
             String url = strings[0];
+
+            //set the active username it knows who to log in later
+            mUsername = strings[1];
 
             try {
                 URL urlObject = new URL(url + SERVICE);
@@ -388,10 +424,15 @@ public class MainActivity extends AppCompatActivity
                 return;
             }
 
-            Log.d("onPostExecute", "Making next fragment");
+            //Log.d("onPostExecute", "Making next fragment");
 
             if(result.equals("success")){
+                //set active user
+                ACTIVE_USER = mUsername;
+
                 //successful login
+                Toast.makeText(getApplicationContext(), "Login success!", Toast.LENGTH_LONG)
+                        .show();
 
                 FragmentTransaction loginTransaction = getSupportFragmentManager().beginTransaction()
                    .replace(R.id.fragmentContainer, new EventSearchFragment())
@@ -402,9 +443,8 @@ public class MainActivity extends AppCompatActivity
 
             }else if(result.equals("fail")){
                 //unsuccessful login
-
-                //TODO raise toast
-
+                Toast.makeText(getApplicationContext(), "Login failed.", Toast.LENGTH_LONG)
+                        .show();
             }
         }
     }
