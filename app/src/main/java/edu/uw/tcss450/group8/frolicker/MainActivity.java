@@ -30,6 +30,13 @@ import java.util.Map;
 import model.PrefList;
 import model.Event;
 
+/**
+ * The main activity that controls internal data, fragment display, click listeners, and AsyncTasks
+ *
+ * @author Evan Pernu
+ * @author Chris Dale
+ * @author Tim Weaver
+ */
 public class MainActivity extends AppCompatActivity
         implements
         LoginOrRegisterFragment.OnFragmentInteractionListener,

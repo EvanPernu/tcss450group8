@@ -19,12 +19,25 @@ import model.Event;
 
 
 /**
- * A simple {@link Fragment} subclass.
+ * This fragment displays the results of an EvenSearchFragment as a list.
+ *
+ * @author Time Weaver
  */
 public class EventSearchResultFragment extends Fragment {
 
+    /**
+     * Stores the list of results
+     */
     private List<Event> eventList;
+
+    /**
+     * A reference to the TextView
+     */
     private TextView textView;
+
+    /**
+     * A reference to the ListView
+     */
     private ListView listView;
 
     public EventSearchResultFragment() {
@@ -48,6 +61,9 @@ public class EventSearchResultFragment extends Fragment {
         return view;
     }
 
+    /**
+     * Populates listView with the results
+     */
     public void showResults() {
         ArrayList<String> names = new ArrayList<>();
         for(int i=0; i<eventList.size(); i++) {

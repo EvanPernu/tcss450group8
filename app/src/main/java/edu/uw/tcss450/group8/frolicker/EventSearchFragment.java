@@ -35,16 +35,33 @@ import static android.content.ContentValues.TAG;
 
 
 /**
- * A simple {@link Fragment} subclass.
+ * This fragment allows users to search for events with the following parameters:
+ *
+ * Keyword
+ * Distance
+ *
+ * @author  Tim Weaver
  */
 public class EventSearchFragment extends Fragment {
 
-    // EventBrite API key
+    /**
+     * EventBrite API key
+     */
     private static final String EVENTBRITE_KEY = "3E3LN6F6HUADRFXTS74Y";
 
-    // search items
+    /**
+     * The field a user types keyword parameters into
+     */
     private EditText et_eventSearch;
+
+    /**
+     * The field a user types location parameters into
+     */
     private EditText et_locationSearch;
+
+    /**
+     * Pressing this button commences a search
+     */
     private Button searchButton;
 
     public EventSearchFragment() {
@@ -72,7 +89,11 @@ public class EventSearchFragment extends Fragment {
         return view;
     }
 
-    // selects the proper API request for the user search
+     /**
+      *     selects the proper API request for the user search
+      *
+      *     @param view the parent view
+      */
     private void checkSearchData(View view) {
 
         String eventSearch = et_eventSearch.getText().toString();
@@ -101,7 +122,9 @@ public class EventSearchFragment extends Fragment {
 
     }
 
-    // connects to API, parses JSON response, displays results in new fragment
+    /**
+     *  connects to API, parses JSON response, displays results in new fragment
+     */
     private class EventSearch extends AsyncTask<String, String, String> {
 
         private List<Event> eventList = new ArrayList<>();
