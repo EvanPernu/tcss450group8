@@ -54,10 +54,10 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
     }
 
     @Override
-    public void onPrefsInitFragmentInteraction(String s, JSONObject theJSO) {
+    public void onPrefsInitFragmentInteraction(String s, String theJSString) {
         if(s.equals("upload")){
             uploadInitPrefsTask task = new uploadInitPrefsTask();
-            task.execute(ACTIVE_USER, "TEST STRING BOIIIIIII");
+            task.execute(ACTIVE_USER, theJSString);
         }
     }
 
@@ -67,6 +67,7 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
      * should be a string representation of the preference in JSONObject form.
      *
      * @author Evan Pernu
+     * @author Charles Bryan (provided initial code)
      */
     private class uploadInitPrefsTask extends AsyncTask<String, Void, String> {
         private final String SERVICE = "PrefsInitUpload.php";

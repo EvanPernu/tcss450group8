@@ -6,14 +6,20 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import model.PrefList;
 
 /**
  * This Fragment displays a list of event categories and prompts the user to choose
@@ -55,7 +61,7 @@ public class PrefsInitFragment extends Fragment {
 
         //Set up the RecyclerView
         mPrefsInitRecyclerView = (RecyclerView) v.findViewById(R.id.recyclerView);
-        mPrefsInitAdapter = new PrefsInitAdapter(getDefaultOptionsMap());
+        mPrefsInitAdapter = new PrefsInitAdapter(getDefaultOptionsMap(), this);
         mPrefsInitRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mPrefsInitRecyclerView.setAdapter(mPrefsInitAdapter);
         mPrefsInitRecyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -81,9 +87,23 @@ public class PrefsInitFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
-    }
+}
 
     /**
+     * This method is called when the user has provided their opinion on every category.
+     * The MainActivity will be prompted to upload the user's preferences to the database.
+     * @param theMap
+     */
+    public void notifyDone(Map<String, Integer> theMap) throws JsonProcessingException {
+        PrefList thePrefs = new PrefList(theMap);
+        ObjectMapper mapper = new ObjectMapper();
+
+        //JSONObject theJSO = new JSONObject();
+        mListener.onPrefsInitFragmentInteraction("upload", mapper.writeValueAsString(theMap));
+        Log.d("notifyDone", "Notified Main to upload the following String to database: \n"+mapper.writeValueAsString(theMap));
+    }
+
+     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
      * to the activity and potentially other fragments contained in that
@@ -94,7 +114,7 @@ public class PrefsInitFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        void onPrefsInitFragmentInteraction(String s, JSONObject theO);
+        void onPrefsInitFragmentInteraction(String s, String theJSString);
     }
 
     /**

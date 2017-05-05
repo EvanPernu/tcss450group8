@@ -25,13 +25,22 @@ public class PrefList implements Serializable{
      *
      *This scale may later be changed to become more complicated.
      */
-    private Map<String, Integer> keywords;
+    private Map<String, Integer> mKeywords;
 
     /**
      * Default constructor
      */
     public PrefList(){
-        keywords = new HashMap<String, Integer>();
+        mKeywords = new HashMap<String, Integer>();
+    }
+
+    /**
+     * Constructor that takes a predefined keyword map.
+     *
+     * @param theKeywords a predefined keyword map following the formal of mKeywords
+     */
+    public PrefList(Map<String, Integer> theKeywords){
+        mKeywords = theKeywords;
     }
 
 
@@ -59,21 +68,21 @@ public class PrefList implements Serializable{
      * Adds the given String/int pair to the internal map
      *
      * @param keyword The desired keyword
-     * @param value The keyword's corresponding value
+     * @param value The mKeyword's corresponding value
      */
     public void addKey(String keyword, int value){
-        keywords.put(keyword, value);
+        mKeywords.put(keyword, value);
     }
 
     /**
-     * Getter for keywords
+     * Getter for mKeywords
      *
-     * @return a deep copy of keywords
+     * @return a deep copy of mKeywords
      */
     public Map<String, Integer> getKeywords(){
         Map<String, Integer> result = new HashMap<String, Integer>();
-        for(String key : keywords.keySet()){
-            result.put(key, keywords.get(key));
+        for(String key : mKeywords.keySet()){
+            result.put(key, mKeywords.get(key));
         }
         return result;
     }
