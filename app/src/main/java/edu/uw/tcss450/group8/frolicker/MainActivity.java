@@ -260,6 +260,20 @@ public class MainActivity extends AppCompatActivity
                             .setIcon(android.R.drawable.ic_dialog_alert)
                             .show();
                 }
+                else if (passwordRegisString.length() < 8)
+                {
+                    // Warn the user.
+                    new AlertDialog.Builder(this)
+                            .setTitle("Warning")
+                            .setMessage("Your password must be at least 8 characters long!")
+                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    // Dismiss box...
+                                }
+                            })
+                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .show();
+                }
                 else
                 {
                     task = new RegisterWebServiceTask();
