@@ -1,4 +1,4 @@
-package edu.uw.tcss450.group8.frolicker;
+package edu.uw.tcss450.group8.frolicker.views;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -14,11 +14,11 @@ import android.view.ViewGroup;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import org.json.JSONObject;
-
 import java.util.HashMap;
 import java.util.Map;
 
+import edu.uw.tcss450.group8.frolicker.R;
+import edu.uw.tcss450.group8.frolicker.model.PrefsInitAdapter;
 import model.PrefList;
 
 /**

@@ -1,19 +1,14 @@
 package edu.uw.tcss450.group8.frolicker;
 
 import android.content.DialogInterface;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.widget.EditText;
 import android.widget.Toast;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -22,13 +17,15 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import model.PrefList;
-import model.Event;
+import edu.uw.tcss450.group8.frolicker.model.EventCard;
+import edu.uw.tcss450.group8.frolicker.views.EventCardRecycler;
+import edu.uw.tcss450.group8.frolicker.views.EventSearchFragment;
+import edu.uw.tcss450.group8.frolicker.views.LoginFragment;
+import edu.uw.tcss450.group8.frolicker.views.LoginOrRegisterFragment;
+import edu.uw.tcss450.group8.frolicker.views.PrefsInitFragment;
+import edu.uw.tcss450.group8.frolicker.views.RegisterFragment;
 
 /**
  * The main activity that controls internal data, fragment display, click listeners, and AsyncTasks
@@ -149,14 +146,14 @@ public class MainActivity extends AppCompatActivity
 
     
     // called when user clicks search button 
-    public void loadEventSearchResultFragment(List<Event> eventList) {
-        
-        EventSearchResultFragment eventSearchResultFragment = new EventSearchResultFragment();
-        eventSearchResultFragment.setEventList(eventList);
-        eventSearchResultFragment.setRetainInstance(true);
-       
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainer, eventSearchResultFragment
-        ).addToBackStack(null).commit(); 
+    public void loadEventSearchResultFragment(List<EventCard> eventCardList) {
+
+        EventCardRecycler eventCardRecycler = new EventCardRecycler();
+        eventCardRecycler.setEventCardList(eventCardList);
+        eventCardRecycler.setRetainInstance(true);
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainer, eventCardRecycler
+        ).addToBackStack(null).commit();
+
     }
 
 

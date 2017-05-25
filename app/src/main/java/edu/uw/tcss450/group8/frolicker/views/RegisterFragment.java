@@ -1,5 +1,4 @@
-package edu.uw.tcss450.group8.frolicker;
-
+package edu.uw.tcss450.group8.frolicker.views;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -9,55 +8,38 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import edu.uw.tcss450.group8.frolicker.R;
+
 
 /**
- * This fragment has a login and a register button;
- * clicking either will take the user to the corresponding fragment.
+ * This is where the user registers ther username and password.
  *
  * @author Chris Dale
  */
-public class LoginOrRegisterFragment extends Fragment implements View.OnClickListener{
-
+public class RegisterFragment extends Fragment implements View.OnClickListener {
     private OnFragmentInteractionListener mListener;
 
-
-    public LoginOrRegisterFragment() {
+    public RegisterFragment() {
         // Required empty public constructor
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_login_or_register, container, false);
-        Button b = (Button) v.findViewById(R.id.toTwo);
-        b.setOnClickListener(this);
-        b = (Button) v.findViewById(R.id.toThree);
+        // Inflate the layout for this fragment
+        View v = inflater.inflate(R.layout.fragment_register, container, false);
+
+        Button b = (Button) v.findViewById(R.id.toFour);
         b.setOnClickListener(this);
 
         return v;
     }
 
     @Override
-    public void onClick(View view)
-    {
-        if (mListener != null) {
-            switch (view.getId()) {
-                case R.id.toTwo:
-                    mListener.onFragmentInteraction(2);
-                    break;
-                case R.id.toThree:
-                    mListener.onFragmentInteraction(3);
-                    break;
-            }
-        }
-    }
-
-    @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
+        if (context instanceof LoginFragment.OnFragmentInteractionListener) {
+            mListener = (RegisterFragment.OnFragmentInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
@@ -68,6 +50,18 @@ public class LoginOrRegisterFragment extends Fragment implements View.OnClickLis
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void onClick(View view)
+    {
+        if (mListener != null) {
+            switch (view.getId()) {
+                case R.id.toFour:
+                    mListener.onFragmentInteraction(5);
+                    break;
+            }
+        }
     }
 
     /**
@@ -83,4 +77,5 @@ public class LoginOrRegisterFragment extends Fragment implements View.OnClickLis
     public interface OnFragmentInteractionListener {
         void onFragmentInteraction(int theFrag);
     }
+
 }

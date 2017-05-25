@@ -1,4 +1,4 @@
-package edu.uw.tcss450.group8.frolicker;
+package edu.uw.tcss450.group8.frolicker.views;
 
 
 import android.content.Context;
@@ -8,6 +8,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import edu.uw.tcss450.group8.frolicker.R;
 
 
 /**
