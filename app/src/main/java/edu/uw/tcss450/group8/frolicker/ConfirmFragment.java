@@ -16,7 +16,7 @@ import android.widget.TextView;
 public class ConfirmFragment extends Fragment {
 
     public ConfirmFragment() {
-        // Required empty public constructor
+        // Required empty public constructo
     }
 
     @Override
