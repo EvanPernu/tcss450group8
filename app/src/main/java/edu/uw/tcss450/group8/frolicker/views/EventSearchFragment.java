@@ -5,7 +5,6 @@ import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,11 +29,7 @@ import java.util.List;
 
 import edu.uw.tcss450.group8.frolicker.MainActivity;
 import edu.uw.tcss450.group8.frolicker.R;
-import model.Event;
 import edu.uw.tcss450.group8.frolicker.model.EventCard;
-
-import static android.content.ContentValues.TAG;
-
 
 
 /**

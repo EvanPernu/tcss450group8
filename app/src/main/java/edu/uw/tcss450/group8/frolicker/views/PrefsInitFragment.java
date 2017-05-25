@@ -19,7 +19,7 @@ import java.util.Map;
 
 import edu.uw.tcss450.group8.frolicker.R;
 import edu.uw.tcss450.group8.frolicker.model.PrefsInitAdapter;
-import model.PrefList;
+import edu.uw.tcss450.group8.frolicker.model.PrefList;
 
 /**
  * This Fragment displays a list of event categories and prompts the user to choose
