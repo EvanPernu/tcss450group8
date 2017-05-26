@@ -32,6 +32,7 @@ import edu.uw.tcss450.group8.frolicker.R;
 import edu.uw.tcss450.group8.frolicker.model.EventCard;
 
 
+
 /**
  * This fragment allows users to search for events with the following parameters:
  *
@@ -98,10 +99,9 @@ public class EventSearchFragment extends Fragment {
     private void startEventSearch(View view) {
 
         String eventSearch = etEventSearch.getText().toString();
-        eventSearch = eventSearch.replace(' ', '+');
-
+        //eventSearch = eventSearch.replace(' ', '+');
         String eventLocation = etLocationSearch.getText().toString();
-        eventLocation = eventLocation.replace(' ', '+');
+        //eventLocation = eventLocation.replace(' ', '+');
 
         if(eventSearch.equals("") && eventLocation.equals("")) {
             Toast.makeText(getContext(), "Enter event or location", Toast.LENGTH_LONG).show();
@@ -167,14 +167,13 @@ public class EventSearchFragment extends Fragment {
                 JSONArray eventsArray = parentObject.getJSONArray("events");
                 for(int i=0; i<eventsArray.length(); i++) {
 
-                    //Event event = new Event();
-                    EventCard eventCard = new EventCard();
 
+                    EventCard eventCard = new EventCard();
                     JSONObject eventObject = eventsArray.getJSONObject(i);
 
                     // parse event name
                     JSONObject eventNameObject = eventObject.getJSONObject("name");
-                    eventCard.setEventTitle(eventNameObject.getString("text"));
+                    eventCard.setEventName(eventNameObject.getString("text"));
 
                     // parse city, address, long, and lat
                     JSONObject eventLocationObject = eventObject.getJSONObject("venue");

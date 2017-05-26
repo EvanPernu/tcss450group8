@@ -9,7 +9,7 @@ import java.util.Date;
 public class EventCard {
 
     private String eventImageUrl;
-    private String eventTitle;
+    private String eventName;
     private String eventStart;
     private String eventEnd;
     private String eventDescription;
@@ -29,11 +29,6 @@ public class EventCard {
         return eventImageUrl;
     }
 
-    public String getTitle() {
-        return eventTitle;
-    }
-
-
     public String getEventEnd() {
         return eventEnd;
     }
@@ -43,23 +38,15 @@ public class EventCard {
     }
 
 
-    public String getEventTitle() {
-        return eventTitle;
+    public String getEventName() {
+        return eventName;
     }
 
     public String getEventStart() {
-        java.text.SimpleDateFormat df = new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-        Date date;
-        try {
-            date = df.parse(eventStart);
-            java.text.SimpleDateFormat sdfmonth = new java.text.SimpleDateFormat("MM/dd");
-            monthDay = sdfmonth.format(date);
-        } catch (java.text.ParseException e) {
-            e.printStackTrace();
-        }
-        return monthDay;
+
+        return eventStart = formatEventDate(eventStart);
     }
-    public String getEventStart2() {
+    public String getUnformattedEventStart() {
         return eventStart;
     }
 
@@ -88,8 +75,8 @@ public class EventCard {
         this.eventImageUrl = eventImageUrl;
     }
 
-    public void setEventTitle(String eventTitle) {
-        this.eventTitle = eventTitle;
+    public void setEventName(String eventName) {
+        this.eventName = eventName;
     }
 
     public void setEventStart(String eventStart) {
@@ -118,5 +105,18 @@ public class EventCard {
 
     public void setEventStreetAddress(String eventStreetAddress) {
         this.eventStreetAddress = eventStreetAddress;
+    }
+
+    private String formatEventDate(String eventStart) {
+        java.text.SimpleDateFormat df = new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+        Date date;
+        try {
+            date = df.parse(eventStart);
+            java.text.SimpleDateFormat sdfmonth = new java.text.SimpleDateFormat("MM/dd");
+            monthDay = sdfmonth.format(date);
+        } catch (java.text.ParseException e) {
+            e.printStackTrace();
+        }
+        return monthDay;
     }
 }

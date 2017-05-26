@@ -203,33 +203,39 @@ public class MainActivity extends AppCompatActivity
                 thirdTransaction.commit();
                 break;
             case 4:
-                EditText editUsername = (EditText) findViewById(R.id.editUsername);
-                EditText editPassword = (EditText) findViewById(R.id.editPassword);
+                // quick login
+                FragmentTransaction loginTransaction = getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragmentContainer, new EventSearchFragment())
+                        .addToBackStack(null);
+                loginTransaction.commit();
 
-                String usernameString = editUsername.getText().toString();
-                String passwordString = editPassword.getText().toString();
-
-                if (passwordString.equals("") || usernameString.equals(""))
-                {
-                    // Warn the user.
-                    new AlertDialog.Builder(this)
-                            .setTitle("Warning")
-                            .setMessage("You didn't fill in a box!")
-                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    // Dismiss box...
-                                }
-                            })
-                            .setIcon(android.R.drawable.ic_dialog_alert)
-                            .show();
-                }
-                else
-                {
-                    Log.d("onFragmentInteraction", "Attempting Login");
-
-                    task = new LoginWebServiceTask();
-                    task.execute(PARTIAL_LOGIN_URL, usernameString, passwordString);
-                }
+//                EditText editUsername = (EditText) findViewById(R.id.editUsername);
+//                EditText editPassword = (EditText) findViewById(R.id.editPassword);
+//
+//                String usernameString = editUsername.getText().toString();
+//                String passwordString = editPassword.getText().toString();
+//
+//                if (passwordString.equals("") || usernameString.equals(""))
+//                {
+//                    // Warn the user.
+//                    new AlertDialog.Builder(this)
+//                            .setTitle("Warning")
+//                            .setMessage("You didn't fill in a box!")
+//                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+//                                public void onClick(DialogInterface dialog, int which) {
+//                                    // Dismiss box...
+//                                }
+//                            })
+//                            .setIcon(android.R.drawable.ic_dialog_alert)
+//                            .show();
+//                }
+//                else
+//                {
+//                    Log.d("onFragmentInteraction", "Attempting Login");
+//
+//                    task = new LoginWebServiceTask();
+//                    task.execute(PARTIAL_LOGIN_URL, usernameString, passwordString);
+//                }
                 break;
             case 5:
                 EditText editRegisUsername = (EditText) findViewById(R.id.editUsername);

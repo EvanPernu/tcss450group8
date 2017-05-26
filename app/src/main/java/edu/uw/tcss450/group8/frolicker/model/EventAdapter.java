@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Typeface;
 import android.os.Build;
 import android.provider.CalendarContract;
 import android.support.v7.app.AlertDialog;
@@ -40,43 +39,43 @@ import edu.uw.tcss450.group8.frolicker.R;
 
 public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventAdapterHolder> {
 
-    private List<EventCard> objectList;
+    private List<EventCard> eventCardList;
     private LayoutInflater inflater;
     private Context context;
     private int mExpandedPosition = -1;
     private RecyclerView recyclerView;
-    private EventCard current;
+    private EventCard currentEventCard;
 
 
-    public EventAdapter(Context context, List<EventCard> objectList, RecyclerView recyclerView) {
+    public EventAdapter(Context context, List<EventCard> eventCardList, RecyclerView recyclerView) {
         inflater = LayoutInflater.from(context);
-        this.objectList = objectList;
+        this.eventCardList = eventCardList;
         this.context = context;
         this.recyclerView = recyclerView;
     }
 
-    class EventAdapterHolder extends RecyclerView.ViewHolder{
+    class EventAdapterHolder extends RecyclerView.ViewHolder {
 
-        TextView title;
-        TextView date;
-        TextView address;
-        ImageView moreInfo;
-        WebView description;
-        ImageView image;
+        TextView eventName;
+        TextView eventDate;
+        TextView eventAddress;
+        ImageView moreInfoButton;
+        WebView eventDescription;
+        ImageView eventImage;
         ProgressBar progressBar;
         LinearLayout llExpandArea;
 
         public EventAdapterHolder(View itemView) {
             super(itemView);
-            title = (TextView) itemView.findViewById(R.id.tv_eventName);
-            date = (TextView) itemView.findViewById(R.id.event_date);
-            address = (TextView) itemView.findViewById(R.id.event_address);
-            image = (ImageView) itemView.findViewById(R.id.eventCardImage);
-            progressBar = (ProgressBar) itemView.findViewById(R.id.progressBar);
-            llExpandArea = (LinearLayout) itemView.findViewById(R.id.llExpandArea);
-            moreInfo = (ImageView) itemView.findViewById(R.id.imageButton2);
-            description = (WebView) itemView.findViewById(R.id.event_description);
 
+            eventName = (TextView) itemView.findViewById(R.id.tv_event_name);
+            eventDate = (TextView) itemView.findViewById(R.id.tv_event_date);
+            eventAddress = (TextView) itemView.findViewById(R.id.event_address);
+            eventImage = (ImageView) itemView.findViewById(R.id.event_image);
+            progressBar = (ProgressBar) itemView.findViewById(R.id.progress);
+            llExpandArea = (LinearLayout) itemView.findViewById(R.id.llExpandArea);
+            moreInfoButton = (ImageView) itemView.findViewById(R.id.more_info_button);
+            eventDescription = (WebView) itemView.findViewById(R.id.event_description);
         }
     }
 
@@ -90,28 +89,30 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventAdapter
     @Override
     public void onBindViewHolder(final EventAdapterHolder holder, int position) {
 
-        // current card
-        current = objectList.get(position);
+        currentEventCard = eventCardList.get(position);
 
 
-        holder.title.setText(current.getTitle());
-        holder.date.setText(current.getEventStart());
-        holder.address.setText(current.getFullAddress());
+        holder.eventName.setText(currentEventCard.getEventName());
+        holder.eventDate.setText(currentEventCard.getEventStart());
+        holder.eventAddress.setText(currentEventCard.getFullAddress());
 
-        Typeface myCustomFont = Typeface.createFromAsset(context.getAssets(), "fonts/grotesk.otf");
-        holder.title.setTypeface(myCustomFont);
+//        Typeface myCustomFont = Typeface.createFromAsset(context.getAssets(), "fonts/grotesk.otf");
+//        holder.eventName.setTypeface(myCustomFont);
 
-        //sets up the image loader library
         setupImageLoader();
-        executeImageLoader(holder, current.getEventImgURL());
+        runImageLoader(holder, currentEventCard.getEventImgURL());
+        setupCalendarLoader(holder);
+        setupCardExpander(holder);
+    }
 
+    private void setupCardExpander(final EventAdapterHolder holder) {
 
-        // Card expander
         final boolean isExpanded = holder.getAdapterPosition() == mExpandedPosition;
         holder.llExpandArea.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
         holder.itemView.setActivated(isExpanded);
-        holder.description.loadDataWithBaseURL(null, current.getEventDescription(), "text/html", "UTF-8", null);
-        holder.moreInfo.setOnClickListener(new View.OnClickListener() {
+        holder.eventDescription.loadDataWithBaseURL(null, currentEventCard.getEventDescription()
+                , "text/html", "UTF-8", null);
+        holder.moreInfoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mExpandedPosition = isExpanded ? -1 : holder.getAdapterPosition();
@@ -121,16 +122,16 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventAdapter
                 notifyDataSetChanged();
             }
         });
+
     }
 
-    public void executeImageLoader(final EventAdapterHolder holder, String imageUrl) {
+    private void runImageLoader(final EventAdapterHolder holder, String imageUrl) {
 
-        //create the imageloader object
         ImageLoader imageLoader = ImageLoader.getInstance();
+        int defaultImage = context.getResources().getIdentifier("@drawable/noimage", null,
+                context.getPackageName());
 
-        int defaultImage = context.getResources().getIdentifier("@drawable/noimage", null, context.getPackageName());
-
-        //create display options
+        //display options
         DisplayImageOptions options = new DisplayImageOptions.Builder().cacheInMemory(true)
                 .cacheOnDisc(true).resetViewBeforeLoading(true)
                 .showImageForEmptyUri(defaultImage)
@@ -139,7 +140,8 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventAdapter
         //.showImageOnLoading(defaultImage).build();
 
         //download and display image from url, add setup progress bar
-        imageLoader.displayImage(imageUrl, holder.image, options, new SimpleImageLoadingListener() {
+        imageLoader.displayImage(imageUrl, holder.eventImage, options,
+                new SimpleImageLoadingListener() {
 
             @Override
             public void onLoadingStarted(String imageUri, View view) {
@@ -155,73 +157,66 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventAdapter
             public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
                 holder.progressBar.setVisibility(View.GONE);
             }
-
         });
+    }
+
+    private void setupCalendarLoader(final EventAdapterHolder holder) {
 
         // press and hold image to add event to calender
-        holder.image.setOnLongClickListener(new View.OnLongClickListener() {
+        holder.eventImage.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(final View v) {
                 new AlertDialog.Builder(context)
                         .setTitle("Add New Event")
                         .setMessage("Add this event to your calendar?")
-                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        .setPositiveButton(android.R.string.yes,
+                                new DialogInterface.OnClickListener() {
 
                             public void onClick(DialogInterface dialog, int whichButton) {
                                 launchCalendar(v);
-                            }})
+                            }
+                        })
                         .setNegativeButton(android.R.string.no, null).show();
                 return false;
             }
         });
+
     }
 
-    public void launchCalendar(View v) {
+    private void launchCalendar(View v) {
 
-        String eventStartRaw = current.getEventStart2();
-        String eventEnd = current.getEventEnd();
+        String eventStart = currentEventCard.getUnformattedEventStart();
+        String eventEnd = currentEventCard.getEventEnd();
         Calendar beginTime = Calendar.getInstance();
         Calendar endTime = Calendar.getInstance();
-
 
         java.text.SimpleDateFormat df = new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
         Date date;
         try {
-            date = df.parse(eventStartRaw);
+            date = df.parse(eventStart);
             beginTime.setTime(date);
             date = df.parse(eventEnd);
             endTime.setTime(date);
         } catch (java.text.ParseException e) {
             e.printStackTrace();
         }
-//
+
         Intent intent = new Intent(Intent.ACTION_INSERT)
                 .setData(CalendarContract.Events.CONTENT_URI)
                 .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, beginTime.getTimeInMillis())
                 .putExtra(CalendarContract.EXTRA_EVENT_END_TIME, endTime.getTimeInMillis())
-                .putExtra(CalendarContract.Events.TITLE, current.getEventTitle())
-                //.putExtra(CalendarContract.Events.DESCRIPTION, "Group class")
-                .putExtra(CalendarContract.Events.EVENT_LOCATION, current.getEventStreetAddress())
-                .putExtra(CalendarContract.Events.AVAILABILITY, CalendarContract.Events.AVAILABILITY_BUSY);
-        //.putExtra(Intent.EXTRA_EMAIL, "rowan@example.com,trevor@example.com");
-        //startActivity(intent);
+                .putExtra(CalendarContract.Events.TITLE, currentEventCard.getEventName())
+                .putExtra(CalendarContract.Events.EVENT_LOCATION,
+                        currentEventCard.getEventStreetAddress())
+                .putExtra(CalendarContract.Events.AVAILABILITY,
+                        CalendarContract.Events.AVAILABILITY_BUSY);
         context.startActivity(intent);
-    }
-
-    @Override
-    public int getItemCount() {
-        return objectList.size();
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return position;
     }
 
     /**
      * Required for setting up the Universal Image loader Library
      */
-    private void setupImageLoader(){
+    private void setupImageLoader() {
         // UNIVERSAL IMAGE LOADER SETUP
         DisplayImageOptions defaultOptions = new DisplayImageOptions.Builder()
                 .cacheOnDisc(true).cacheInMemory(true)
@@ -236,6 +231,16 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventAdapter
 
         ImageLoader.getInstance().init(config);
         // END - UNIVERSAL IMAGE LOADER SETUP
+    }
+
+    @Override
+    public int getItemCount() {
+        return eventCardList.size();
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
     }
 
 
