@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#4c27b0</color>
-    <!--<color name="colorPrimaryDark">#484141</color>-->
-    <color name="colorPrimaryDark">#47505d</color>
+    <color name="colorPrimaryDark">#242424</color>
     <color name="colorAccent">#f163c4</color>
     <color name="textPrimary">#ca0e0e</color>
     <color name="textSecondary">#727272</color>
     <color name="white">#fff</color>
-    <color name="background">#dae2e2e2</color>
+    <color name="background">#44146f</color>
     <color name="cardText">#D3D3D3</color>
+    <color name="offWhite">#fcf5eb</color>
+
+    <color name="buttonLightGreen">#66ff99</color>
+    <color name="buttonGradientLightGreen">#66ff66</color>
+
 </resources>

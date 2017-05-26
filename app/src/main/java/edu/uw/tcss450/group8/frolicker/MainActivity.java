@@ -144,8 +144,14 @@ public class MainActivity extends AppCompatActivity
     }
     }
 
-    
-    // called when user clicks search button 
+
+    /**
+     *  called when user clicks search button
+     *
+     *  @param eventCardList a list of each event in card form
+     *
+     *  @author Tim Weaver
+     */
     public void loadEventSearchResultFragment(List<EventCard> eventCardList) {
 
         EventCardRecycler eventCardRecycler = new EventCardRecycler();

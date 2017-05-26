@@ -10,6 +10,7 @@
     android:clickable="true"
     android:orientation="vertical">
 
+
     <TextView
         android:id="@+id/pref_init_name"
         android:textSize="25dp"
@@ -26,7 +27,8 @@
         android:layout_alignParentRight="true"
         android:layout_below="@+id/pref_init_name"
         android:layout_marginTop="20dp"
-        android:text="Dislike" />
+        android:text="Dislike"
+        style="@style/ButtonTheme1"/>
 
     <Button
         android:id="@+id/pref_init_btnMaybe"
@@ -35,7 +37,8 @@
         android:layout_alignBaseline="@+id/pref_init_btnDislike"
         android:layout_alignBottom="@+id/pref_init_btnDislike"
         android:layout_centerHorizontal="true"
-        android:text="Maybe" />
+        android:text="Maybe"
+        style="@style/ButtonTheme1"/>
 
     <Button
         android:id="@+id/pref_init_btnLike"
@@ -44,6 +47,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignTop="@+id/pref_init_btnMaybe"
-        android:text="Like" />
+        android:text="Like"
+        style="@style/ButtonTheme1"/>
 
 </RelativeLayout>

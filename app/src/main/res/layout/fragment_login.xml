@@ -42,7 +42,8 @@
             android:text="@string/to_four"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editPassword" />
+            app:layout_constraintTop_toBottomOf="@+id/editPassword"
+            style="@style/ButtonTheme1"/>
     </android.support.constraint.ConstraintLayout>
 
 </FrameLayout>
