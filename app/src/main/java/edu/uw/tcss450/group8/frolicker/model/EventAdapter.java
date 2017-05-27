@@ -45,6 +45,8 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventAdapter
     private int mExpandedPosition = -1;
     private RecyclerView recyclerView;
     private EventCard currentEventCard;
+    private static final int TYPE_HEADER = 0;
+    private static final int TYPE_ITEM = 1;
 
 
     public EventAdapter(Context context, List<EventCard> eventCardList, RecyclerView recyclerView) {
@@ -53,6 +55,8 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventAdapter
         this.context = context;
         this.recyclerView = recyclerView;
     }
+
+
 
     class EventAdapterHolder extends RecyclerView.ViewHolder {
 
@@ -81,9 +85,12 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventAdapter
 
     @Override
     public EventAdapterHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        //View view;
+
         View view = inflater.inflate(R.layout.fragment_event_card, parent, false);
         EventAdapterHolder holder = new EventAdapterHolder(view);
         return holder;
+
     }
 
     @Override
@@ -232,6 +239,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventAdapter
         ImageLoader.getInstance().init(config);
         // END - UNIVERSAL IMAGE LOADER SETUP
     }
+
 
     @Override
     public int getItemCount() {

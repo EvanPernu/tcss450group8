@@ -84,7 +84,7 @@ public class EventSearchFragment extends Fragment {
         searchButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                startEventSearch(v);
+                searchInit();
             }
         });
 
@@ -93,35 +93,51 @@ public class EventSearchFragment extends Fragment {
 
      /**
       *     selects the proper API request for the user search
-      *
-      *     @param view the parent view
       */
-    private void startEventSearch(View view) {
+    private void searchInit() {
 
-        String eventSearch = etEventSearch.getText().toString();
-        //eventSearch = eventSearch.replace(' ', '+');
-        String eventLocation = etLocationSearch.getText().toString();
-        //eventLocation = eventLocation.replace(' ', '+');
+        String event = etEventSearch.getText().toString();
+        String location = etLocationSearch.getText().toString();
 
-        if(eventSearch.equals("") && eventLocation.equals("")) {
-            Toast.makeText(getContext(), "Enter event or location", Toast.LENGTH_LONG).show();
-        }else if(eventSearch.equals("") && !eventLocation.equals("")) {
-            new EventSearch().execute(EVENTBRITE_URL + "?location.address="
-                    + eventLocation + "&token=" + EVENTBRITE_KEY + "&expand=venue");
-        } else if(!eventSearch.equals("") && eventLocation.equals("")) {
-            new EventSearch().execute(EVENTBRITE_URL + "?q="
-                    + eventSearch + "&token=" + EVENTBRITE_KEY + "&expand=venue");
-        } else {
-            new EventSearch().execute(EVENTBRITE_URL + "?q="
-                    + eventSearch + "&location.address=" + eventLocation + "&token=" + EVENTBRITE_KEY + "&expand=venue");
+        switch(validateInput(event, location)) {
+
+            case 0 :
+                Toast.makeText(getContext(), "Enter event or location", Toast.LENGTH_LONG).show();
+                break;
+            case 1:
+                new EventSearch().execute(EVENTBRITE_URL + "?location.address="
+                        + location + "&token=" + EVENTBRITE_KEY + "&expand=venue");
+                break;
+            case 2:
+                new EventSearch().execute(EVENTBRITE_URL + "?q="
+                        + event + "&token=" + EVENTBRITE_KEY + "&expand=venue");
+                break;
+            case 3:
+                new EventSearch().execute(EVENTBRITE_URL + "?q="
+                        + event + "&location.address=" + location + "&token="
+                        + EVENTBRITE_KEY + "&expand=venue");
+                break;
+            default:
+                break;
         }
+    }
 
+    private int validateInput(String event, String location) {
+
+        if(event.equals("") && location.equals("")) {
+            return 0;
+        }else if(event.equals("") && !location.equals("")) {
+            return 1;
+        } else if(!event.equals("") && location.equals("")) {
+            return 2;
+        } else {
+            return 3;
+        }
     }
 
     /**
      *  connects to API, parses JSON response, displays results in new fragment
      */
-    // connects to API, parses JSON response, displays results in new fragment
     private class EventSearch extends AsyncTask<String, String, String> {
 
         private List<EventCard> eventCardList = new ArrayList<>();

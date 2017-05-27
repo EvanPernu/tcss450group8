@@ -56,6 +56,8 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        
+
         //create a new LoginFragment, load it
         if(savedInstanceState == null) {
             if (findViewById(R.id.fragmentContainer) != null) {
