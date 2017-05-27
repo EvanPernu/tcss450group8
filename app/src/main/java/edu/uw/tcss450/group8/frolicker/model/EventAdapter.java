@@ -45,8 +45,6 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventAdapter
     private int mExpandedPosition = -1;
     private RecyclerView recyclerView;
     private EventCard currentEventCard;
-    private static final int TYPE_HEADER = 0;
-    private static final int TYPE_ITEM = 1;
 
 
     public EventAdapter(Context context, List<EventCard> eventCardList, RecyclerView recyclerView) {
@@ -55,8 +53,6 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventAdapter
         this.context = context;
         this.recyclerView = recyclerView;
     }
-
-
 
     class EventAdapterHolder extends RecyclerView.ViewHolder {
 
@@ -180,7 +176,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventAdapter
                                 new DialogInterface.OnClickListener() {
 
                             public void onClick(DialogInterface dialog, int whichButton) {
-                                launchCalendar(v);
+                                launchCalendar();
                             }
                         })
                         .setNegativeButton(android.R.string.no, null).show();
@@ -190,7 +186,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventAdapter
 
     }
 
-    private void launchCalendar(View v) {
+    private void launchCalendar() {
 
         String eventStart = currentEventCard.getUnformattedEventStart();
         String eventEnd = currentEventCard.getEventEnd();
