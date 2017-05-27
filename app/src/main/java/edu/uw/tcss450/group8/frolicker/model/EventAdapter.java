@@ -239,7 +239,12 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
 
     @Override
     public int getItemCount() {
-        return eventCardList.size();
+        if(eventCardList != null) {
+            return eventCardList.size();
+        }else{
+            //fixes a bug where the app would crash upon a search returning nothing
+            return 0;
+        }
     }
 
     @Override

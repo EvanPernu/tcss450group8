@@ -1,6 +1,8 @@
 package edu.uw.tcss450.group8.frolicker;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
@@ -10,18 +12,26 @@ import android.util.Log;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.List;
 
 import edu.uw.tcss450.group8.frolicker.model.EventCard;
 import edu.uw.tcss450.group8.frolicker.views.EventCardRecycler;
 import edu.uw.tcss450.group8.frolicker.views.EventSearchFragment;
+import edu.uw.tcss450.group8.frolicker.views.HomeFragment;
 import edu.uw.tcss450.group8.frolicker.views.LoginFragment;
 import edu.uw.tcss450.group8.frolicker.views.LoginOrRegisterFragment;
 import edu.uw.tcss450.group8.frolicker.views.PrefsInitFragment;
@@ -39,7 +49,17 @@ public class MainActivity extends AppCompatActivity
         LoginOrRegisterFragment.OnFragmentInteractionListener,
         LoginFragment.OnFragmentInteractionListener,
         RegisterFragment.OnFragmentInteractionListener,
-        PrefsInitFragment.OnFragmentInteractionListener{
+        PrefsInitFragment.OnFragmentInteractionListener,
+        HomeFragment.OnFragmentInteractionListener {
+
+
+    // EvenBrite url
+    private static final String EVENTBRITE_URL = "https://www.eventbriteapi.com/v3/events/search/";
+
+    /**
+     * EventBrite API key
+     */
+    private static final String EVENTBRITE_KEY = "3E3LN6F6HUADRFXTS74Y";
 
     //The URL of the database
     private final String DB_URL = "http://cssgate.insttech.washington.edu/~_450agrp8/";
@@ -50,6 +70,9 @@ public class MainActivity extends AppCompatActivity
     //The URL of login
     private static final String PARTIAL_LOGIN_URL = "http://cssgate.insttech.washington.edu/"
             + "~_450agrp8/feedback";
+
+    //The user's home fragment
+    private HomeFragment mHomeFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +106,20 @@ public class MainActivity extends AppCompatActivity
                     .addToBackStack(null);
             loginTransaction.commit();
         }
+    }
+
+    @Override
+    public void onHomeFragmentInteraction(int n) {
+        switch(n) {
+            case 1:
+                FragmentTransaction secondTransaction = getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragmentContainer, new EventSearchFragment())
+                        .addToBackStack(null);
+                secondTransaction.commit();
+                break;
+
+        }
+
     }
 
     /**
@@ -190,8 +227,6 @@ public class MainActivity extends AppCompatActivity
                 FragmentTransaction secondTransaction = getSupportFragmentManager().beginTransaction()
                         .replace(R.id.fragmentContainer, loginFragment)
                         .addToBackStack(null);
-
-                // Commit the transaction
                 secondTransaction.commit();
                 break;
             case 3:
@@ -200,44 +235,38 @@ public class MainActivity extends AppCompatActivity
                 FragmentTransaction thirdTransaction = getSupportFragmentManager().beginTransaction()
                         .replace(R.id.fragmentContainer, registerFragment)
                         .addToBackStack(null);
-
-                // Commit the transaction
                 thirdTransaction.commit();
                 break;
             case 4:
                 // quick login
-                FragmentTransaction loginTransaction = getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fragmentContainer, new EventSearchFragment())
-                        .addToBackStack(null);
-                loginTransaction.commit();
 
-//                EditText editUsername = (EditText) findViewById(R.id.editUsername);
-//                EditText editPassword = (EditText) findViewById(R.id.editPassword);
-//
-//                String usernameString = editUsername.getText().toString();
-//                String passwordString = editPassword.getText().toString();
-//
-//                if (passwordString.equals("") || usernameString.equals(""))
-//                {
-//                    // Warn the user.
-//                    new AlertDialog.Builder(this)
-//                            .setTitle("Warning")
-//                            .setMessage("You didn't fill in a box!")
-//                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-//                                public void onClick(DialogInterface dialog, int which) {
-//                                    // Dismiss box...
-//                                }
-//                            })
-//                            .setIcon(android.R.drawable.ic_dialog_alert)
-//                            .show();
-//                }
-//                else
-//                {
-//                    Log.d("onFragmentInteraction", "Attempting Login");
-//
-//                    task = new LoginWebServiceTask();
-//                    task.execute(PARTIAL_LOGIN_URL, usernameString, passwordString);
-//                }
+                EditText editUsername = (EditText) findViewById(R.id.editUsername);
+                EditText editPassword = (EditText) findViewById(R.id.editPassword);
+
+                String usernameString = editUsername.getText().toString();
+                String passwordString = editPassword.getText().toString();
+
+                if (passwordString.equals("") || usernameString.equals(""))
+                {
+                    // Warn the user.
+                    new AlertDialog.Builder(this)
+                            .setTitle("Warning")
+                            .setMessage("You didn't fill in a box!")
+                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    // Dismiss box...
+                                }
+                            })
+                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .show();
+                }
+                else
+                {
+                    Log.d("onFragmentInteraction", "Attempting Login");
+
+                    task = new LoginWebServiceTask();
+                    task.execute(PARTIAL_LOGIN_URL, usernameString, passwordString);
+                }
                 break;
             case 5:
                 EditText editRegisUsername = (EditText) findViewById(R.id.editUsername);
@@ -466,17 +495,147 @@ public class MainActivity extends AppCompatActivity
                 Toast.makeText(getApplicationContext(), "Login success!", Toast.LENGTH_LONG)
                         .show();
 
-                FragmentTransaction loginTransaction = getSupportFragmentManager().beginTransaction()
-                   .replace(R.id.fragmentContainer, new EventSearchFragment())
-                   .addToBackStack(null);
+                mHomeFragment = new HomeFragment();
 
-           // Commit the transaction
-            loginTransaction.commit();
+                //---------------------------------------------TODO Change to user's current location-----------------------------------------------------------------------------------------------------
+                String location = "Seattle";
+                String event = "Music";
+
+                new EventSearch().execute(EVENTBRITE_URL + "?q="
+                        + event + "&location.address=" + location + "&token="
+                        + EVENTBRITE_KEY + "&expand=venue");
+
+                FragmentTransaction loginTransaction = getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragmentContainer,  mHomeFragment)
+                        .addToBackStack(null);
+                loginTransaction.commit();
 
             }else if(result.equals("fail")){
                 //unsuccessful login
                 Toast.makeText(getApplicationContext(), "Login failed.", Toast.LENGTH_LONG)
                         .show();
+            }
+        }
+    }
+
+
+    /**
+     *  connects to API, parses JSON response, displays results in new fragment
+     *
+     *  @author Tim Weaver
+     */
+    private class EventSearch extends AsyncTask<String, String, String> {
+
+        private List<EventCard> eventCardList = new ArrayList<>();
+        private ProgressDialog pDialog;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            super.onPreExecute();
+            pDialog = new ProgressDialog(MainActivity.this) ; //TODO different getcontext() call?------------------------------------------------------------------------------------------
+            pDialog.setMessage("Connecting to Server");
+            pDialog.setIndeterminate(false);
+            pDialog.setCancelable(true);
+            pDialog.show();
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            HttpURLConnection connection = null;
+            BufferedReader reader = null;
+
+            try {
+                URL url = new URL(params[0]);
+                connection = (HttpURLConnection) url.openConnection();
+                connection.connect();
+
+                InputStream stream = connection.getInputStream();
+                reader = new BufferedReader((new InputStreamReader(stream)));
+                StringBuffer buffer = new StringBuffer();
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    buffer.append(line);
+                }
+
+                String finalJson = buffer.toString();
+                JSONObject parentObject = new JSONObject(finalJson);
+
+                JSONObject pageDataObject = parentObject.getJSONObject("pagination");
+                int resultCount = pageDataObject.getInt("object_count");
+                if(resultCount == 0) {
+                    return "No events found";
+                }
+                JSONArray eventsArray = parentObject.getJSONArray("events");
+                for(int i=0; i<eventsArray.length(); i++) {
+
+
+                    EventCard eventCard = new EventCard();
+                    JSONObject eventObject = eventsArray.getJSONObject(i);
+
+                    // parse event name
+                    eventCard.setEventName(eventObject.getJSONObject("name").getString("text"));
+
+                    // parse city, address, long, and lat
+                    JSONObject location = eventObject.getJSONObject("venue")
+                            .getJSONObject("address");
+                    eventCard.setEventCity(location.getString("city"));
+                    eventCard.setEventLatitude(location.getString("latitude"));
+                    eventCard.setEventLongitude(location.getString("longitude"));
+                    eventCard.setEventStreetAddress(location.getString("address_1"));
+
+                    // parse date and time
+                    eventCard.setEventStart(eventObject.getJSONObject("start").getString("local"));
+                    eventCard.setEventEnd(eventObject.getJSONObject("end").getString("local"));
+
+                    // parse description
+                    eventCard.setEventDescription(eventObject.getJSONObject("description")
+                            .getString("html"));
+
+                    // parse image if not null
+                    if(!eventObject.get("logo_id").equals(null)) {
+                        eventCard.setEventImgURL(eventObject.getJSONObject("logo")
+                                .getJSONObject("original")
+                                .getString("url"));
+                    }else{
+                        eventCard.setEventImgURL("null");
+                    }
+                    eventCardList.add(eventCard);
+                }
+                return "";
+
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            } finally {
+                if(connection != null) {
+                    connection.disconnect();
+                }
+                try {
+                    if(reader != null) {
+                        reader.close();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            if (pDialog.isShowing()) {
+                pDialog.dismiss();
+            }
+            if(s.equals("No events found")) {
+                Toast.makeText(getApplicationContext(), "No events found", Toast.LENGTH_LONG).show();
+            } else {
+                Log.d("homeAsync", "about to etEventCardList(");
+                mHomeFragment.setEventCardList(eventCardList);
             }
         }
     }
