@@ -495,9 +495,7 @@ public class MainActivity extends AppCompatActivity
                 Toast.makeText(getApplicationContext(), "Login success!", Toast.LENGTH_LONG)
                         .show();
 
-                mHomeFragment = new HomeFragment();
-
-                //---------------------------------------------TODO Change to user's current location-----------------------------------------------------------------------------------------------------
+                //---------------------------------------------TODO Change to user's current location and preferred keywords-----------------------------------------------------------------------------------------------------
                 String location = "Seattle";
                 String event = "Music";
 
@@ -505,10 +503,7 @@ public class MainActivity extends AppCompatActivity
                         + event + "&location.address=" + location + "&token="
                         + EVENTBRITE_KEY + "&expand=venue");
 
-                FragmentTransaction loginTransaction = getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fragmentContainer,  mHomeFragment)
-                        .addToBackStack(null);
-                loginTransaction.commit();
+
 
             }else if(result.equals("fail")){
                 //unsuccessful login
@@ -533,7 +528,7 @@ public class MainActivity extends AppCompatActivity
         protected void onPreExecute() {
             super.onPreExecute();
             super.onPreExecute();
-            pDialog = new ProgressDialog(MainActivity.this) ; //TODO different getcontext() call?------------------------------------------------------------------------------------------
+            pDialog = new ProgressDialog(MainActivity.this);
             pDialog.setMessage("Connecting to Server");
             pDialog.setIndeterminate(false);
             pDialog.setCancelable(true);
@@ -634,8 +629,19 @@ public class MainActivity extends AppCompatActivity
             if(s.equals("No events found")) {
                 Toast.makeText(getApplicationContext(), "No events found", Toast.LENGTH_LONG).show();
             } else {
-                Log.d("homeAsync", "about to etEventCardList(");
+                //pass the active user's name to the new fragment
+                mHomeFragment = new HomeFragment();
+                Bundle args = new Bundle();
+                args.putString("user", ACTIVE_USER);
+                mHomeFragment.setArguments(args);
+
                 mHomeFragment.setEventCardList(eventCardList);
+
+                FragmentTransaction loginTransaction = getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragmentContainer,  mHomeFragment)
+                        .addToBackStack(null);
+                loginTransaction.commit();
+
             }
         }
     }

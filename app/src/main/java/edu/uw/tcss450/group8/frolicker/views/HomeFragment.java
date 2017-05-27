@@ -12,11 +12,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -43,8 +45,9 @@ import edu.uw.tcss450.group8.frolicker.model.EventCard;
 public class HomeFragment extends Fragment  implements View.OnClickListener {
 
     private List<EventCard> eventCardList;
-
+    private TextView mActiveUser;
     private OnFragmentInteractionListener mListener;
+    private String mUsername;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -67,6 +70,10 @@ public class HomeFragment extends Fragment  implements View.OnClickListener {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        Bundle args = this.getArguments();
+        if (args != null) {
+            mUsername = args.getString("user", "User");
+        }
     }
 
     @Override
@@ -75,8 +82,13 @@ public class HomeFragment extends Fragment  implements View.OnClickListener {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_home, container, false);
 
+        //set onclick listeners
         Button b = (Button) rootView.findViewById(R.id.btnSearchAnyEvents);
         b.setOnClickListener(this);
+
+        //create a reference to user display
+        mActiveUser = (TextView) rootView.findViewById(R.id.activeUser);
+        mActiveUser.setText("Welcome, "+mUsername+"!");
 
         //set up the RecyclerView
         RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.event_card_recycler_home);
@@ -138,16 +150,3 @@ public class HomeFragment extends Fragment  implements View.OnClickListener {
     }
 
 }
-
-//<android.support.v7.widget.RecyclerView
-//        android:id="@+id/event_card_recycler_home"
-//        android:layout_width="108dp"
-//        android:layout_height="wrap_content"
-//        android:layout_marginBottom="8dp"
-//        android:layout_marginLeft="8dp"
-//        android:layout_marginRight="8dp"
-//        android:layout_marginTop="8dp"
-//        app:layout_constraintBottom_toTopOf="@+id/tableLayout"
-//        app:layout_constraintLeft_toLeftOf="parent"
-//        app:layout_constraintRight_toRightOf="parent"
-//        app:layout_constraintTop_toBottomOf="@+id/textView" />
