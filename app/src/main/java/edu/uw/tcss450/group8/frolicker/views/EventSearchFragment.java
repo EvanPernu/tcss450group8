@@ -188,32 +188,29 @@ public class EventSearchFragment extends Fragment {
                     JSONObject eventObject = eventsArray.getJSONObject(i);
 
                     // parse event name
-                    JSONObject eventNameObject = eventObject.getJSONObject("name");
-                    eventCard.setEventName(eventNameObject.getString("text"));
+                    eventCard.setEventName(eventObject.getJSONObject("name").getString("text"));
 
                     // parse city, address, long, and lat
-                    JSONObject eventLocationObject = eventObject.getJSONObject("venue");
-                    JSONObject location = eventLocationObject.getJSONObject("address");
+                    JSONObject location = eventObject.getJSONObject("venue")
+                            .getJSONObject("address");
                     eventCard.setEventCity(location.getString("city"));
                     eventCard.setEventLatitude(location.getString("latitude"));
                     eventCard.setEventLongitude(location.getString("longitude"));
                     eventCard.setEventStreetAddress(location.getString("address_1"));
 
                     // parse date and time
-                    JSONObject dateObject = eventObject.getJSONObject("start");
-                    eventCard.setEventStart(dateObject.getString("local"));
-                    dateObject = eventObject.getJSONObject("end");
-                    eventCard.setEventEnd(dateObject.getString("local"));
+                    eventCard.setEventStart(eventObject.getJSONObject("start").getString("local"));
+                    eventCard.setEventEnd(eventObject.getJSONObject("end").getString("local"));
 
                     // parse description
-                    JSONObject descriptionObject = eventObject.getJSONObject("description");
-                    eventCard.setEventDescription(descriptionObject.getString("html"));
+                    eventCard.setEventDescription(eventObject.getJSONObject("description")
+                            .getString("html"));
 
                     // parse image if not null
                     if(!eventObject.get("logo_id").equals(null)) {
-                        JSONObject eventImage = eventObject.getJSONObject("logo");
-                        JSONObject imageObject = eventImage.getJSONObject("original");
-                        eventCard.setEventImgURL(imageObject.getString("url"));
+                        eventCard.setEventImgURL(eventObject.getJSONObject("logo")
+                                .getJSONObject("original")
+                                .getString("url"));
                     }else{
                         eventCard.setEventImgURL("null");
                     }
