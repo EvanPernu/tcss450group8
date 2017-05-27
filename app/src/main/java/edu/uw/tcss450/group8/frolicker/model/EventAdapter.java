@@ -37,7 +37,7 @@ import edu.uw.tcss450.group8.frolicker.R;
  * Created by Tim on 5/25/2017.
  */
 
-public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventAdapterHolder> {
+public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHolder> {
 
     private List<EventCard> eventCardList;
     private LayoutInflater inflater;
@@ -54,7 +54,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventAdapter
         this.recyclerView = recyclerView;
     }
 
-    class EventAdapterHolder extends RecyclerView.ViewHolder {
+    class EventViewHolder extends RecyclerView.ViewHolder {
 
         TextView eventName;
         TextView eventDate;
@@ -65,7 +65,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventAdapter
         ProgressBar progressBar;
         LinearLayout llExpandArea;
 
-        public EventAdapterHolder(View itemView) {
+        public EventViewHolder(View itemView) {
             super(itemView);
 
             eventName = (TextView) itemView.findViewById(R.id.tv_event_name);
@@ -80,17 +80,17 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventAdapter
     }
 
     @Override
-    public EventAdapterHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public EventViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         //View view;
 
         View view = inflater.inflate(R.layout.fragment_event_card, parent, false);
-        EventAdapterHolder holder = new EventAdapterHolder(view);
+        EventViewHolder holder = new EventViewHolder(view);
         return holder;
 
     }
 
     @Override
-    public void onBindViewHolder(final EventAdapterHolder holder, int position) {
+    public void onBindViewHolder(final EventViewHolder holder, int position) {
 
         currentEventCard = eventCardList.get(position);
 
@@ -108,7 +108,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventAdapter
         setupCardExpander(holder);
     }
 
-    private void setupCardExpander(final EventAdapterHolder holder) {
+    private void setupCardExpander(final EventViewHolder holder) {
 
         final boolean isExpanded = holder.getAdapterPosition() == mExpandedPosition;
         holder.llExpandArea.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
@@ -128,7 +128,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventAdapter
 
     }
 
-    private void runImageLoader(final EventAdapterHolder holder, String imageUrl) {
+    private void runImageLoader(final EventViewHolder holder, String imageUrl) {
 
         ImageLoader imageLoader = ImageLoader.getInstance();
         int defaultImage = context.getResources().getIdentifier("@drawable/noimage", null,
@@ -163,7 +163,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventAdapter
         });
     }
 
-    private void setupCalendarLoader(final EventAdapterHolder holder) {
+    private void setupCalendarLoader(final EventViewHolder holder) {
 
         // press and hold image to add event to calender
         holder.eventImage.setOnLongClickListener(new View.OnLongClickListener() {
