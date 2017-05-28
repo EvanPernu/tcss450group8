@@ -15,8 +15,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
+import edu.uw.tcss450.group8.frolicker.MainActivity;
 import edu.uw.tcss450.group8.frolicker.R;
 import edu.uw.tcss450.group8.frolicker.model.PrefsInitAdapter;
 import edu.uw.tcss450.group8.frolicker.model.PrefList;
@@ -36,9 +39,19 @@ public class PrefsInitFragment extends Fragment {
     private PrefsInitAdapter mPrefsInitAdapter;
     private RecyclerView mPrefsInitRecyclerView;
 
-    /** The list of event categories the user will be asked about*/
-    private final String[] DEFAULT_PREFS = {"Comedy", "Sports", "Music", "Fair",
-            "Culture", "Charity", "Historical", "Theatre", "Dance", "Outdoors"};
+//    /** The list of event categories the user will be asked about. These come from
+//     * EventBrite and are hard coded to reduce wait times.
+//     */
+//
+//    private final String[] DEFAULT_PREFS = {"Comedy", "Sports", "Music", "Fair",
+//            "Culture", "Charity", "Historical", "Theatre", "Dance", "Outdoors"};
+
+
+    /**
+     * The list of event categories the user will be asked about. These come from
+     * EventBrite and are hard coded to reduce wait times.
+     */
+    private Set<String> mCategories;
 
     /**Default constructor*/
     public PrefsInitFragment() {
@@ -48,8 +61,7 @@ public class PrefsInitFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-        }
+        mCategories = MainActivity.initCategories().keySet();
     }
 
     @Override
@@ -94,8 +106,8 @@ public class PrefsInitFragment extends Fragment {
      * The MainActivity will be prompted to upload the user's preferences to the database.
      * @param theMap
      */
-    public void notifyDone(Map<String, Integer> theMap) throws JsonProcessingException {
-        PrefList thePrefs = new PrefList(theMap);
+    public void notifyDone(Map<Integer, Integer> theMap) throws JsonProcessingException {
+        //PrefList thePrefs = new PrefList(theMap);
         ObjectMapper mapper = new ObjectMapper();
 
         //JSONObject theJSO = new JSONObject();
@@ -124,9 +136,12 @@ public class PrefsInitFragment extends Fragment {
     private Map<String, Integer> getDefaultOptionsMap(){
         Map<String, Integer> result = new HashMap<String, Integer>();
 
-        for(int i = 0; i < DEFAULT_PREFS.length; i++) {
-            result.put(DEFAULT_PREFS[i], 0);
+        for(String s : mCategories){
+            result.put(s, 0);
         }
         return result;
     }
+
+
+
 }

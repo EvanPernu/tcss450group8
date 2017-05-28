@@ -11,9 +11,11 @@ import android.widget.TextView;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import edu.uw.tcss450.group8.frolicker.MainActivity;
 import edu.uw.tcss450.group8.frolicker.views.PrefsInitFragment;
 import edu.uw.tcss450.group8.frolicker.R;
 
@@ -99,7 +101,16 @@ public class PrefsInitAdapter extends RecyclerView.Adapter<PrefsInitAdapter.Hold
 
         //the user has provided their opinion on each category. pass mMap to the parent Fragment.
         if(mKeyList.isEmpty()){
-            mParent.notifyDone(mMap);
+            Map<Integer, Integer> resultMap = new HashMap<Integer, Integer>();
+
+            for(String key : mMap.keySet()){
+                resultMap.put(MainActivity.initCategories().get(key), mMap.get(key));
+                Log.d("prefinitadap", "put {"+MainActivity.initCategories().get(key)+", "+mMap.get(key)+"} in map");
+            }
+
+
+
+            mParent.notifyDone(resultMap);
         }
     }
 

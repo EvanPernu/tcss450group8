@@ -16,7 +16,7 @@ import java.util.Map;
 public class PrefList implements Serializable{
 
     /**
-     * Key: a list of event categories
+     * Key: the EventBrite ID of the category
      * Value: how interested the user is in the category
      *
      *     -1 = not interested
@@ -25,13 +25,13 @@ public class PrefList implements Serializable{
      *
      *This scale may later be changed to become more complicated.
      */
-    private Map<String, Integer> mKeywords;
+    private Map<Integer, Integer> mKeywords;
 
     /**
      * Default constructor
      */
     public PrefList(){
-        mKeywords = new HashMap<String, Integer>();
+        mKeywords = new HashMap<Integer, Integer>();
     }
 
     /**
@@ -39,30 +39,30 @@ public class PrefList implements Serializable{
      *
      * @param theKeywords a predefined keyword map following the formal of mKeywords
      */
-    public PrefList(Map<String, Integer> theKeywords){
+    public PrefList(Map<Integer, Integer> theKeywords){
         mKeywords = theKeywords;
     }
 
 
-    /**
-     * Converts a JSONObject of PrefList format into an object of type PrefList
-     *
-     * @param other a JSONObject of PrefList format
-     * @return an object of type PrefList
-     * @throws JSONException
-     */
-    public PrefList JSONFactory(JSONObject other) throws JSONException {
-        PrefList result = new PrefList();
-
-        //add each key pair to result's internal map
-        Iterator<String> keys = other.keys();
-        while(keys.hasNext()){
-            String key = keys.next();
-            result.addKey(key, other.getInt(key));
-        }
-
-        return result;
-    }
+//    /**
+//     * Converts a JSONObject of PrefList format into an object of type PrefList
+//     *
+//     * @param other a JSONObject of PrefList format
+//     * @return an object of type PrefList
+//     * @throws JSONException
+//     */
+//    public PrefList JSONFactory(JSONObject other) throws JSONException {
+//        PrefList result = new PrefList();
+//
+//        //add each key pair to result's internal map
+//        Iterator<String> keys = other.keys();
+//        while(keys.hasNext()){
+//            String key = keys.next();
+//            result.addKey(key, other.getInt(key));
+//        }
+//
+//        return result;
+//    }
 
     /**
      * Adds the given String/int pair to the internal map
@@ -70,7 +70,7 @@ public class PrefList implements Serializable{
      * @param keyword The desired keyword
      * @param value The mKeyword's corresponding value
      */
-    public void addKey(String keyword, int value){
+    public void addKey(int keyword, int value){
         mKeywords.put(keyword, value);
     }
 
@@ -79,9 +79,9 @@ public class PrefList implements Serializable{
      *
      * @return a deep copy of mKeywords
      */
-    public Map<String, Integer> getKeywords(){
-        Map<String, Integer> result = new HashMap<String, Integer>();
-        for(String key : mKeywords.keySet()){
+    public Map<Integer, Integer> getKeywords(){
+        Map<Integer, Integer> result = new HashMap<Integer, Integer>();
+        for(Integer key : mKeywords.keySet()){
             result.put(key, mKeywords.get(key));
         }
         return result;

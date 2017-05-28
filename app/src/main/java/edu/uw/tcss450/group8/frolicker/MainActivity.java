@@ -26,7 +26,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import edu.uw.tcss450.group8.frolicker.model.EventCard;
 import edu.uw.tcss450.group8.frolicker.views.EventCardRecycler;
@@ -100,11 +102,14 @@ public class MainActivity extends AppCompatActivity
 
             Log.d("main/upload", "about to log in");
 
-            //log them in automatically
-            FragmentTransaction loginTransaction = getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragmentContainer, new EventSearchFragment())
-                    .addToBackStack(null);
-            loginTransaction.commit();
+//           //log them in automatically
+//
+            String location = "Seattle";
+            String event = "Music";
+
+            new EventSearch().execute(EVENTBRITE_URL + "?q="
+                    + event + "&location.address=" + location + "&token="
+                    + EVENTBRITE_KEY + "&expand=venue");
         }
     }
 
@@ -492,8 +497,8 @@ public class MainActivity extends AppCompatActivity
                 ACTIVE_USER = mUsername;
 
                 //successful login
-                Toast.makeText(getApplicationContext(), "Login success!", Toast.LENGTH_LONG)
-                        .show();
+                //Toast.makeText(getApplicationContext(), "Login success!", Toast.LENGTH_LONG)
+                //       .show();
 
                 //---------------------------------------------TODO Change to user's current location and preferred keywords-----------------------------------------------------------------------------------------------------
                 String location = "Seattle";
@@ -502,6 +507,7 @@ public class MainActivity extends AppCompatActivity
                 new EventSearch().execute(EVENTBRITE_URL + "?q="
                         + event + "&location.address=" + location + "&token="
                         + EVENTBRITE_KEY + "&expand=venue");
+
 
 
 
@@ -626,7 +632,10 @@ public class MainActivity extends AppCompatActivity
             if (pDialog.isShowing()) {
                 pDialog.dismiss();
             }
-            if(s.equals("No events found")) {
+
+            if(s == null){
+                Toast.makeText(getApplicationContext(), "DEVELOPER ERROR: no events string", Toast.LENGTH_LONG).show();
+            } else if(s.equals("No events found")) {
                 Toast.makeText(getApplicationContext(), "No events found", Toast.LENGTH_LONG).show();
             } else {
                 //pass the active user's name to the new fragment
@@ -644,5 +653,39 @@ public class MainActivity extends AppCompatActivity
 
             }
         }
+    }
+
+    /**
+     * Builds a map of every category as well as its EventBrite ID.
+     * These values are hard coded to eliminate the need for another api call.
+     *
+     * @return a map of every category as well as its EventBrite ID
+     */
+    public static Map<String, Integer> initCategories(){
+        Map<String, Integer> mCategories = new HashMap<String, Integer>();
+
+        mCategories = new HashMap<String, Integer>();
+        mCategories.put("Music",103);
+        mCategories.put("Business & Professional",101);
+        mCategories.put("Food & Drink",110);
+        mCategories.put("Community & Culture",113);
+        mCategories.put("Performing & Visual Arts",105);
+        mCategories.put("Film, Media & Entertainment",104);
+        mCategories.put("Sports & Fitness",108);
+        mCategories.put("Health & Wellness",107);
+        mCategories.put("Science & Technology",102);
+        mCategories.put("Travel & Outdoor",109);
+        mCategories.put("Charity & Causes",111);
+        mCategories.put("Religion & Spirituality",114);
+        mCategories.put("Family & Education",115);
+        mCategories.put("Seasonal & Holiday",116);
+        mCategories.put("Government & Politics",112);
+        mCategories.put("Fashion & Beauty",106);
+        mCategories.put("Home & Lifestyle",117);
+        mCategories.put("Auto, Boat & Air",118);
+        mCategories.put("Hobbies & Special Interest",119);
+        mCategories.put("Other",199);
+
+        return mCategories;
     }
 }
