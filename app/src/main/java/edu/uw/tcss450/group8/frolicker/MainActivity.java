@@ -101,7 +101,6 @@ public class MainActivity extends AppCompatActivity
     private LocationRequest mLocationRequest;
     private Location mCurrentLocation;
     private Context context = this;
-    private SearchView searchView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -136,15 +135,6 @@ public class MainActivity extends AppCompatActivity
                     new String[]{Manifest.permission.ACCESS_COARSE_LOCATION
                             , Manifest.permission.ACCESS_FINE_LOCATION},
                     MY_PERMISSIONS_LOCATIONS);
-        }
-
-        if (mGoogleApiClient == null) {
-            mGoogleApiClient = new GoogleApiClient.Builder(this)
-                    .addConnectionCallbacks(this)
-                    .addOnConnectionFailedListener(this)
-                    .addApi(LocationServices.API)
-                    .build();
-            //.addApi(AppIndex.API).build();
         }
 
         mLocationRequest = new LocationRequest();
@@ -182,7 +172,7 @@ public class MainActivity extends AppCompatActivity
 
         switch (requestCode) {
             case MY_PERMISSIONS_LOCATIONS: {
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_DENIED) {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     // permission granted
                 } else {
                     // permission denied
@@ -227,8 +217,7 @@ public class MainActivity extends AppCompatActivity
                     Manifest.permission.ACCESS_COARSE_LOCATION)
                     == PackageManager.PERMISSION_GRANTED) {
                 mCurrentLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-                System.out.println(mCurrentLocation + " fuck");
-                //if (mCurrentLocation != null) Log.i("MAINONCONNECTED", mCurrentLocation.toString());
+                if (mCurrentLocation != null) Log.i("MAINONCONNECTED", mCurrentLocation.toString());
                 startLocationUpdates();
             }
         }
@@ -258,6 +247,15 @@ public class MainActivity extends AppCompatActivity
 
             Log.d("main/upload", "about to log in");
 
+            if (mCurrentLocation == null) {
+                if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION)
+                        == PackageManager.PERMISSION_GRANTED
+                        && ActivityCompat.checkSelfPermission(context,
+                        Manifest.permission.ACCESS_COARSE_LOCATION)
+                        == PackageManager.PERMISSION_GRANTED) {
+                    mCurrentLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+                }
+            }
             // automatic search for events near current location when logging in
             new EventSearchService(context,"Logging in...").execute(EVENTBRITE_URL + "?location.latitude="
                     + String.valueOf(mCurrentLocation.getLatitude()) + "&location.longitude="
@@ -301,7 +299,6 @@ public class MainActivity extends AppCompatActivity
             String url = strings[0];
             try {
                 URL urlObject = new URL(DB_URL + SERVICE + "?my_u="+strings[0]);
-                Log.d("uploadPrefsInit", "URL = "+urlObject.toString());
 
                 urlConnection = (HttpURLConnection) urlObject.openConnection();
                 urlConnection.setRequestMethod("POST");
@@ -669,13 +666,21 @@ public class MainActivity extends AppCompatActivity
                 Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG).show();
                 return;
             }
-
-            //Log.d("onPostExecute", "Making next fragment");
-
+            
             if(result.equals("success")){
                 //set active user
                 ACTIVE_USER = mUsername;
 
+
+                if (mCurrentLocation == null) {
+                    if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION)
+                            == PackageManager.PERMISSION_GRANTED
+                            && ActivityCompat.checkSelfPermission(context,
+                            Manifest.permission.ACCESS_COARSE_LOCATION)
+                            == PackageManager.PERMISSION_GRANTED) {
+                        mCurrentLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+                    }
+                }
                 // automatic search for events near current location when logging in
                 new EventSearchService(context,"Logging in...").execute(EVENTBRITE_URL + "?location.latitude="
                         + String.valueOf(mCurrentLocation.getLatitude()) + "&location.longitude="

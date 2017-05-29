@@ -21,13 +21,12 @@ import java.util.List;
 
 import edu.uw.tcss450.group8.frolicker.MainActivity;
 
+
 /**
  * Created by Tim on 5/27/2017.
  */
 public class EventSearchService extends AsyncTask<String, String, String> {
 
-    private static final String FETCHING_NEARBY_EVENTS = "Logging in...";
-    private static final String FETCHING_EVENTS = "Finding events...";
     private List<EventCard> eventCardList = new ArrayList<>();
     private ProgressDialog pDialog;
     private String dialogMessage;
@@ -38,8 +37,6 @@ public class EventSearchService extends AsyncTask<String, String, String> {
         this.context = context;
         this.dialogMessage = dialogMessage;
     }
-
-
 
     @Override
     protected void onPreExecute() {
@@ -55,7 +52,6 @@ public class EventSearchService extends AsyncTask<String, String, String> {
     protected String doInBackground(String... params) {
         HttpURLConnection connection = null;
         BufferedReader reader = null;
-
         try {
             URL url = new URL(params[0]);
             connection = (HttpURLConnection) url.openConnection();
@@ -146,17 +142,9 @@ public class EventSearchService extends AsyncTask<String, String, String> {
         if (s.equals("No events found")) {
             Toast.makeText(context.getApplicationContext(), "No events found", Toast.LENGTH_LONG).show();
 
-            //TODO temporary bug fix
-            MainActivity mainActivity = (MainActivity)context;
-            mainActivity.loadNextEventFragment(eventCardList,1);
-
         } else {
             MainActivity mainActivity = (MainActivity)context;
-            //if(dialogMessage.contains("Logging")) {
-                mainActivity.loadNextEventFragment(eventCardList,1);
-            //}else{
-                //mainActivity.loadNextEventFragment(eventCardList,2);
-            //}
+            mainActivity.loadNextEventFragment(eventCardList,1);
         }
     }
 }
