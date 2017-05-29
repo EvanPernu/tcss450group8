@@ -1,9 +1,7 @@
 package edu.uw.tcss450.group8.frolicker.model;
-import org.json.JSONException;
-import org.json.JSONObject;
+
 import java.io.Serializable;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 /**

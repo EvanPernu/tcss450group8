@@ -15,14 +15,12 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import edu.uw.tcss450.group8.frolicker.MainActivity;
 import edu.uw.tcss450.group8.frolicker.R;
 import edu.uw.tcss450.group8.frolicker.model.PrefsInitAdapter;
-import edu.uw.tcss450.group8.frolicker.model.PrefList;
 
 /**
  * This Fragment displays a list of event categories and prompts the user to choose

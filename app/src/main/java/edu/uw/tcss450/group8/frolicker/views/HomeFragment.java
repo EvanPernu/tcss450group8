@@ -14,7 +14,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
 import java.util.List;
+
 import edu.uw.tcss450.group8.frolicker.MainActivity;
 import edu.uw.tcss450.group8.frolicker.R;
 import edu.uw.tcss450.group8.frolicker.model.EventAdapter;

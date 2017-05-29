@@ -12,19 +12,18 @@
 
     <EditText
         android:id="@+id/editTextEvent"
-        android:layout_width="wrap_content"
+        android:layout_width="368dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:drawableRight="@android:drawable/ic_menu_search"
         android:ems="10"
-        android:hint="Event"
+        android:hint="Find Events Near Me"
         android:inputType="textPersonName"
-        android:layout_marginRight="8dp"
-        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         android:layout_marginLeft="8dp"
         app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="120dp" />
+        android:layout_marginRight="8dp"
+        app:layout_constraintRight_toRightOf="parent" />
 
     <EditText
         android:id="@+id/editTextLocation"
@@ -34,13 +33,9 @@
         android:hint="Location"
         android:inputType="textPersonName"
         android:layout_marginTop="8dp"
-        app:layout_constraintTop_toBottomOf="@+id/editTextEvent"
-        android:layout_marginRight="8dp"
-        app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginLeft="8dp"
+        app:layout_constraintTop_toBottomOf="@+id/btnSearchOptions"
         app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp" />
+        app:layout_constraintRight_toRightOf="parent" />
 
     <!--<EditText-->
         <!--android:id="@+id/editText"-->
@@ -51,22 +46,74 @@
 
     <Button
         android:id="@+id/searchButton"
-        android:layout_width="wrap_content"
+        style="@style/ButtonTheme1"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
         android:text="Search"
-        android:layout_marginTop="13dp"
-        app:layout_constraintTop_toBottomOf="@+id/editTextLocation"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintHorizontal_bias="0.0" />
 
     <SeekBar
-        android:id="@+id/seekBar"
+        android:id="@+id/barSearchDistance"
         android:layout_width="368dp"
         android:layout_height="wrap_content"
-        tools:layout_editor_absoluteX="8dp"
+        android:max="99"
+        android:progress="10"
+        android:layout_marginLeft="16dp"
+        app:layout_constraintLeft_toLeftOf="parent"
         android:layout_marginTop="8dp"
-        app:layout_constraintTop_toBottomOf="@+id/searchButton"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="8dp" />
+        app:layout_constraintTop_toBottomOf="@+id/txtSearchDistance"
+        android:layout_marginStart="16dp" />
+
+    <TextView
+        android:id="@+id/txtSearchDistance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Within 10 miles"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginTop="24dp"
+        app:layout_constraintTop_toBottomOf="@+id/editTextEvent"
+        app:layout_constraintHorizontal_bias="0.501" />
+
+    <Button
+        android:id="@+id/btnSearchOptions"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:drawableRight="@android:drawable/ic_menu_more"
+        android:text="More Search Options."
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/barSearchDistance"
+        app:layout_constraintHorizontal_bias="0.503" />
+
+    <Spinner
+        android:id="@+id/spinnerOrder"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editTextLocation" />
+
+    <ListView
+        android:id="@+id/listCategories"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/searchButton"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/spinnerOrder" />
 
 </android.support.constraint.ConstraintLayout>

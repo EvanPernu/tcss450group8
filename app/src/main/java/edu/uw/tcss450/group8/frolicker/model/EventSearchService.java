@@ -1,11 +1,8 @@
 package edu.uw.tcss450.group8.frolicker.model;
 
-import android.app.Activity;
-import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 import android.widget.Toast;
 
 import org.json.JSONArray;

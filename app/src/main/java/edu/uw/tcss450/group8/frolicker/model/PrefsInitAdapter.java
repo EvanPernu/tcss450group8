@@ -16,8 +16,8 @@ import java.util.List;
 import java.util.Map;
 
 import edu.uw.tcss450.group8.frolicker.MainActivity;
-import edu.uw.tcss450.group8.frolicker.views.PrefsInitFragment;
 import edu.uw.tcss450.group8.frolicker.R;
+import edu.uw.tcss450.group8.frolicker.views.PrefsInitFragment;
 
 
 /**

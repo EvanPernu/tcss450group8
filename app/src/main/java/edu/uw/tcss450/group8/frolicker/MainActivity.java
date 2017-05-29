@@ -1,17 +1,18 @@
 package edu.uw.tcss450.group8.frolicker;
+
 import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.widget.EditText;
@@ -19,6 +20,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 
@@ -40,7 +42,6 @@ import edu.uw.tcss450.group8.frolicker.views.EventSearchFragment;
 import edu.uw.tcss450.group8.frolicker.views.HomeFragment;
 import edu.uw.tcss450.group8.frolicker.views.LoginFragment;
 import edu.uw.tcss450.group8.frolicker.views.LoginOrRegisterFragment;
-import com.google.android.gms.location.LocationListener;
 import edu.uw.tcss450.group8.frolicker.views.PrefsInitFragment;
 import edu.uw.tcss450.group8.frolicker.views.RegisterFragment;
 
@@ -86,6 +87,11 @@ public class MainActivity extends AppCompatActivity
 
     // google api
     private GoogleApiClient mGoogleApiClient;
+
+    /**
+     * The default search distance for events, in miles
+     */
+    private static final String DEFUALT_SEARCH_RADIUS = "10mi";
 
     //private LocationServices mLocation;
     public static final long UPDATE_INTERVAL_IN_MILLISECONDS = 10000;
@@ -222,7 +228,7 @@ public class MainActivity extends AppCompatActivity
                     == PackageManager.PERMISSION_GRANTED) {
                 mCurrentLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
                 System.out.println(mCurrentLocation + " fuck");
-                if (mCurrentLocation != null) Log.i("MAINONCONNECTED", mCurrentLocation.toString());
+                //if (mCurrentLocation != null) Log.i("MAINONCONNECTED", mCurrentLocation.toString());
                 startLocationUpdates();
             }
         }
@@ -673,7 +679,7 @@ public class MainActivity extends AppCompatActivity
                 // automatic search for events near current location when logging in
                 new EventSearchService(context,"Logging in...").execute(EVENTBRITE_URL + "?location.latitude="
                         + String.valueOf(mCurrentLocation.getLatitude()) + "&location.longitude="
-                        + String.valueOf(mCurrentLocation.getLongitude()) + "&token="
+                        + String.valueOf(mCurrentLocation.getLongitude()) + "&location.within="+DEFUALT_SEARCH_RADIUS+"&token="
                         + EVENTBRITE_KEY + "&expand=venue");
 
             }else if(result.equals("fail")){
