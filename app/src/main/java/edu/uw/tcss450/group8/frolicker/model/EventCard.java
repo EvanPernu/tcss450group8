@@ -19,6 +19,7 @@ public class EventCard {
     private String eventStreetAddress;
     private String monthDay;
     private String eventPrice;
+    private String eventVenue;
 
     public EventCard() {
 
@@ -69,6 +70,14 @@ public class EventCard {
     public String getFullAddress() {
         return eventStreetAddress + ", " + eventCity;
 
+    }
+
+    public String getEventVenue() {
+        return eventVenue;
+    }
+
+    public void setEventVenue(String eventVenue) {
+        this.eventVenue = eventVenue;
     }
 
     public void setEventImgURL(String eventImageUrl) {

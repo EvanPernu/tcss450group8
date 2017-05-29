@@ -1,41 +1,46 @@
 package edu.uw.tcss450.group8.frolicker;
-
-import android.app.ProgressDialog;
+import android.Manifest;
+import android.content.Context;
 import android.content.DialogInterface;
-import android.net.Uri;
+import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.AsyncTask;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import edu.uw.tcss450.group8.frolicker.model.EventCard;
-import edu.uw.tcss450.group8.frolicker.views.EventCardRecycler;
+import edu.uw.tcss450.group8.frolicker.model.EventSearchService;
+import edu.uw.tcss450.group8.frolicker.views.EventMapFragment;
 import edu.uw.tcss450.group8.frolicker.views.EventSearchFragment;
 import edu.uw.tcss450.group8.frolicker.views.HomeFragment;
 import edu.uw.tcss450.group8.frolicker.views.LoginFragment;
 import edu.uw.tcss450.group8.frolicker.views.LoginOrRegisterFragment;
+import com.google.android.gms.location.LocationListener;
 import edu.uw.tcss450.group8.frolicker.views.PrefsInitFragment;
 import edu.uw.tcss450.group8.frolicker.views.RegisterFragment;
 
@@ -52,7 +57,10 @@ public class MainActivity extends AppCompatActivity
         LoginFragment.OnFragmentInteractionListener,
         RegisterFragment.OnFragmentInteractionListener,
         PrefsInitFragment.OnFragmentInteractionListener,
-        HomeFragment.OnFragmentInteractionListener {
+        HomeFragment.OnFragmentInteractionListener,
+        GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener,
+        LocationListener {
 
 
     // EvenBrite url
@@ -76,12 +84,25 @@ public class MainActivity extends AppCompatActivity
     //The user's home fragment
     private HomeFragment mHomeFragment;
 
+    // google api
+    private GoogleApiClient mGoogleApiClient;
+
+    //private LocationServices mLocation;
+    public static final long UPDATE_INTERVAL_IN_MILLISECONDS = 10000;
+    public static final long FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS = UPDATE_INTERVAL_IN_MILLISECONDS / 2;
+    private static final int MY_PERMISSIONS_LOCATIONS = 814;
+
+    private LocationRequest mLocationRequest;
+    private Location mCurrentLocation;
+    private Context context = this;
+    private SearchView searchView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        
+        setupLocation();
 
         //create a new LoginFragment, load it
         if(savedInstanceState == null) {
@@ -93,6 +114,135 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    public void setupLocation() {
+
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .build();
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_COARSE_LOCATION
+                            , Manifest.permission.ACCESS_FINE_LOCATION},
+                    MY_PERMISSIONS_LOCATIONS);
+        }
+
+        if (mGoogleApiClient == null) {
+            mGoogleApiClient = new GoogleApiClient.Builder(this)
+                    .addConnectionCallbacks(this)
+                    .addOnConnectionFailedListener(this)
+                    .addApi(LocationServices.API)
+                    .build();
+            //.addApi(AppIndex.API).build();
+        }
+
+        mLocationRequest = new LocationRequest();
+        mLocationRequest.setInterval(UPDATE_INTERVAL_IN_MILLISECONDS);
+        mLocationRequest.setFastestInterval(FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS);
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+
+    }
+
+
+
+
+    protected void startLocationUpdates() {
+        if (ActivityCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_COARSE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient,
+                    mLocationRequest, this);
+        }
+    }
+
+    protected void stopLocationUpdates() {
+        if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
+            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+        }
+    }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode,
+                permissions, grantResults);
+
+        switch (requestCode) {
+            case MY_PERMISSIONS_LOCATIONS: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_DENIED) {
+                    // permission granted
+                } else {
+                    // permission denied
+                    Toast.makeText(this, "Locations need to be working for this portion, please provide permission", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (mGoogleApiClient != null) {
+            mGoogleApiClient.connect();
+        }
+
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (mGoogleApiClient != null) {
+            mGoogleApiClient.disconnect();
+        }
+
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        stopLocationUpdates();
+        if (mGoogleApiClient != null && mGoogleApiClient.isConnected())
+            mGoogleApiClient.disconnect();
+    }
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+        if (mCurrentLocation == null) {
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                    == PackageManager.PERMISSION_GRANTED
+                    && ActivityCompat.checkSelfPermission(this,
+                    Manifest.permission.ACCESS_COARSE_LOCATION)
+                    == PackageManager.PERMISSION_GRANTED) {
+                mCurrentLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+                System.out.println(mCurrentLocation + " fuck");
+                //if (mCurrentLocation != null) Log.i(TAG, mCurrentLocation.toString());
+                startLocationUpdates();
+            }
+        }
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+        mGoogleApiClient.connect();
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+        //connectionResult.getErrorCode());
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        mCurrentLocation = location;
+    }
+
     @Override
     public void onPrefsInitFragmentInteraction(String s, String theJSString) {
         if(s.equals("upload")){
@@ -102,16 +252,14 @@ public class MainActivity extends AppCompatActivity
 
             Log.d("main/upload", "about to log in");
 
-//           //log them in automatically
-//
-            String location = "Seattle";
-            String event = "Music";
-
-            new EventSearch().execute(EVENTBRITE_URL + "?q="
-                    + event + "&location.address=" + location + "&token="
+            // automatic search for events near current location when logging in
+            new EventSearchService(context,"Logging in...").execute(EVENTBRITE_URL + "?location.latitude="
+                    + String.valueOf(mCurrentLocation.getLatitude()) + "&location.longitude="
+                    + String.valueOf(mCurrentLocation.getLongitude()) + "&token="
                     + EVENTBRITE_KEY + "&expand=venue");
         }
     }
+
 
     @Override
     public void onHomeFragmentInteraction(int n) {
@@ -196,14 +344,40 @@ public class MainActivity extends AppCompatActivity
      *
      *  @author Tim Weaver
      */
-    public void loadEventSearchResultFragment(List<EventCard> eventCardList) {
+    // loads fragments that require event data
+    public void loadNextEventFragment(List<EventCard> eventCardList, int frag) {
 
-        EventCardRecycler eventCardRecycler = new EventCardRecycler();
-        eventCardRecycler.setEventCardList(eventCardList);
-        eventCardRecycler.setRetainInstance(true);
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainer, eventCardRecycler
-        ).addToBackStack(null).commit();
+        switch (frag) {
 
+            case 0:
+                EventSearchFragment mEventSearchFragment = new EventSearchFragment();
+                mEventSearchFragment.setRetainInstance(true);
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainer, mEventSearchFragment
+                ).addToBackStack(null).commit();
+                break;
+
+            case 1:
+                HomeFragment mHomeFragment = new HomeFragment();
+                Bundle args = new Bundle();
+                args.putString("name", ACTIVE_USER);
+                mHomeFragment.setArguments(args);
+                mHomeFragment.setEventCardList(eventCardList);
+                mHomeFragment.setRetainInstance(true);
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainer, mHomeFragment
+                ).addToBackStack(null).commit();
+                break;
+
+            case 2:
+                EventMapFragment mapFragment = new EventMapFragment();
+                mapFragment.setEventCardList(eventCardList);
+                mapFragment.setRetainInstance(true);
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainer, mapFragment)
+                        .addToBackStack(null).commit();
+                break;
+
+            default:
+                break;
+        }
     }
 
 
@@ -496,20 +670,11 @@ public class MainActivity extends AppCompatActivity
                 //set active user
                 ACTIVE_USER = mUsername;
 
-                //successful login
-                //Toast.makeText(getApplicationContext(), "Login success!", Toast.LENGTH_LONG)
-                //       .show();
-
-                //---------------------------------------------TODO Change to user's current location and preferred keywords-----------------------------------------------------------------------------------------------------
-                String location = "Seattle";
-                String event = "Music";
-
-                new EventSearch().execute(EVENTBRITE_URL + "?q="
-                        + event + "&location.address=" + location + "&token="
+                // automatic search for events near current location when logging in
+                new EventSearchService(context,"Logging in...").execute(EVENTBRITE_URL + "?location.latitude="
+                        + String.valueOf(mCurrentLocation.getLatitude()) + "&location.longitude="
+                        + String.valueOf(mCurrentLocation.getLongitude()) + "&token="
                         + EVENTBRITE_KEY + "&expand=venue");
-
-
-
 
             }else if(result.equals("fail")){
                 //unsuccessful login
@@ -520,140 +685,6 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-    /**
-     *  connects to API, parses JSON response, displays results in new fragment
-     *
-     *  @author Tim Weaver
-     */
-    private class EventSearch extends AsyncTask<String, String, String> {
-
-        private List<EventCard> eventCardList = new ArrayList<>();
-        private ProgressDialog pDialog;
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            super.onPreExecute();
-            pDialog = new ProgressDialog(MainActivity.this);
-            pDialog.setMessage("Connecting to Server");
-            pDialog.setIndeterminate(false);
-            pDialog.setCancelable(true);
-            pDialog.show();
-        }
-
-        @Override
-        protected String doInBackground(String... params) {
-            HttpURLConnection connection = null;
-            BufferedReader reader = null;
-
-            try {
-                URL url = new URL(params[0]);
-                connection = (HttpURLConnection) url.openConnection();
-                connection.connect();
-
-                InputStream stream = connection.getInputStream();
-                reader = new BufferedReader((new InputStreamReader(stream)));
-                StringBuffer buffer = new StringBuffer();
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    buffer.append(line);
-                }
-
-                String finalJson = buffer.toString();
-                JSONObject parentObject = new JSONObject(finalJson);
-
-                JSONObject pageDataObject = parentObject.getJSONObject("pagination");
-                int resultCount = pageDataObject.getInt("object_count");
-                if(resultCount == 0) {
-                    return "No events found";
-                }
-                JSONArray eventsArray = parentObject.getJSONArray("events");
-                for(int i=0; i<eventsArray.length(); i++) {
-
-
-                    EventCard eventCard = new EventCard();
-                    JSONObject eventObject = eventsArray.getJSONObject(i);
-
-                    // parse event name
-                    eventCard.setEventName(eventObject.getJSONObject("name").getString("text"));
-
-                    // parse city, address, long, and lat
-                    JSONObject location = eventObject.getJSONObject("venue")
-                            .getJSONObject("address");
-                    eventCard.setEventCity(location.getString("city"));
-                    eventCard.setEventLatitude(location.getString("latitude"));
-                    eventCard.setEventLongitude(location.getString("longitude"));
-                    eventCard.setEventStreetAddress(location.getString("address_1"));
-
-                    // parse date and time
-                    eventCard.setEventStart(eventObject.getJSONObject("start").getString("local"));
-                    eventCard.setEventEnd(eventObject.getJSONObject("end").getString("local"));
-
-                    // parse description
-                    eventCard.setEventDescription(eventObject.getJSONObject("description")
-                            .getString("html"));
-
-                    // parse image if not null
-                    if(!eventObject.get("logo_id").equals(null)) {
-                        eventCard.setEventImgURL(eventObject.getJSONObject("logo")
-                                .getJSONObject("original")
-                                .getString("url"));
-                    }else{
-                        eventCard.setEventImgURL("null");
-                    }
-                    eventCardList.add(eventCard);
-                }
-                return "";
-
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (JSONException e) {
-                e.printStackTrace();
-            } finally {
-                if(connection != null) {
-                    connection.disconnect();
-                }
-                try {
-                    if(reader != null) {
-                        reader.close();
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
-            if (pDialog.isShowing()) {
-                pDialog.dismiss();
-            }
-
-            if(s == null){
-                Toast.makeText(getApplicationContext(), "DEVELOPER ERROR: no events string", Toast.LENGTH_LONG).show();
-            } else if(s.equals("No events found")) {
-                Toast.makeText(getApplicationContext(), "No events found", Toast.LENGTH_LONG).show();
-            } else {
-                //pass the active user's name to the new fragment
-                mHomeFragment = new HomeFragment();
-                Bundle args = new Bundle();
-                args.putString("user", ACTIVE_USER);
-                mHomeFragment.setArguments(args);
-
-                mHomeFragment.setEventCardList(eventCardList);
-
-                FragmentTransaction loginTransaction = getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fragmentContainer,  mHomeFragment)
-                        .addToBackStack(null);
-                loginTransaction.commit();
-
-            }
-        }
-    }
 
     /**
      * Builds a map of every category as well as its EventBrite ID.

@@ -1,8 +1,4 @@
 package edu.uw.tcss450.group8.frolicker.views;
-
-
-import android.app.ProgressDialog;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -11,26 +7,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-
-
-import edu.uw.tcss450.group8.frolicker.MainActivity;
 import edu.uw.tcss450.group8.frolicker.R;
-import edu.uw.tcss450.group8.frolicker.model.EventCard;
-
+import edu.uw.tcss450.group8.frolicker.model.EventSearchService;
 
 
 /**
@@ -96,8 +74,16 @@ public class EventSearchFragment extends Fragment {
       */
     private void searchInit() {
 
+
+
         String event = etEventSearch.getText().toString();
         String location = etLocationSearch.getText().toString();
+        String distance;
+        String sortBy;
+        String startDateKeyword;
+        String dialogMessage = "Finding events...";
+
+
 
         switch(validateInput(event, location)) {
 
@@ -105,15 +91,15 @@ public class EventSearchFragment extends Fragment {
                 Toast.makeText(getContext(), "Enter event or location", Toast.LENGTH_LONG).show();
                 break;
             case 1:
-                new EventSearch().execute(EVENTBRITE_URL + "?location.address="
+                new EventSearchService(getContext(),dialogMessage).execute(EVENTBRITE_URL + "?location.address="
                         + location + "&token=" + EVENTBRITE_KEY + "&expand=venue");
                 break;
             case 2:
-                new EventSearch().execute(EVENTBRITE_URL + "?q="
+                new EventSearchService(getContext(),dialogMessage).execute(EVENTBRITE_URL + "?q="
                         + event + "&token=" + EVENTBRITE_KEY + "&expand=venue");
                 break;
             case 3:
-                new EventSearch().execute(EVENTBRITE_URL + "?q="
+                new EventSearchService(getContext(),dialogMessage).execute(EVENTBRITE_URL + "?q="
                         + event + "&location.address=" + location + "&token="
                         + EVENTBRITE_KEY + "&expand=venue");
                 break;
@@ -132,126 +118,6 @@ public class EventSearchFragment extends Fragment {
             return 2;
         } else {
             return 3;
-        }
-    }
-
-    /**
-     *  connects to API, parses JSON response, displays results in new fragment
-     */
-    private class EventSearch extends AsyncTask<String, String, String> {
-
-        private List<EventCard> eventCardList = new ArrayList<>();
-        private ProgressDialog pDialog;
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            super.onPreExecute();
-            pDialog = new ProgressDialog(getContext()) ;
-            pDialog.setMessage("Finding events...");
-            pDialog.setIndeterminate(false);
-            pDialog.setCancelable(true);
-            pDialog.show();
-        }
-
-        @Override
-        protected String doInBackground(String... params) {
-            HttpURLConnection connection = null;
-            BufferedReader reader = null;
-
-            try {
-                URL url = new URL(params[0]);
-                connection = (HttpURLConnection) url.openConnection();
-                connection.connect();
-
-                InputStream stream = connection.getInputStream();
-                reader = new BufferedReader((new InputStreamReader(stream)));
-                StringBuffer buffer = new StringBuffer();
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    buffer.append(line);
-                }
-
-                String finalJson = buffer.toString();
-                JSONObject parentObject = new JSONObject(finalJson);
-
-                JSONObject pageDataObject = parentObject.getJSONObject("pagination");
-                int resultCount = pageDataObject.getInt("object_count");
-                if(resultCount == 0) {
-                    return "No events found";
-                }
-                JSONArray eventsArray = parentObject.getJSONArray("events");
-                for(int i=0; i<eventsArray.length(); i++) {
-
-
-                    EventCard eventCard = new EventCard();
-                    JSONObject eventObject = eventsArray.getJSONObject(i);
-
-                    // parse event name
-                    eventCard.setEventName(eventObject.getJSONObject("name").getString("text"));
-
-                    // parse city, address, long, and lat
-                    JSONObject location = eventObject.getJSONObject("venue")
-                            .getJSONObject("address");
-                    eventCard.setEventCity(location.getString("city"));
-                    eventCard.setEventLatitude(location.getString("latitude"));
-                    eventCard.setEventLongitude(location.getString("longitude"));
-                    eventCard.setEventStreetAddress(location.getString("address_1"));
-
-                    // parse date and time
-                    eventCard.setEventStart(eventObject.getJSONObject("start").getString("local"));
-                    eventCard.setEventEnd(eventObject.getJSONObject("end").getString("local"));
-
-                    // parse description
-                    eventCard.setEventDescription(eventObject.getJSONObject("description")
-                            .getString("html"));
-
-                    // parse image if not null
-                    if(!eventObject.get("logo_id").equals(null)) {
-                        eventCard.setEventImgURL(eventObject.getJSONObject("logo")
-                                .getJSONObject("original")
-                                .getString("url"));
-                    }else{
-                        eventCard.setEventImgURL("null");
-                    }
-                    eventCardList.add(eventCard);
-                }
-                return "";
-
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (JSONException e) {
-                e.printStackTrace();
-            } finally {
-                if(connection != null) {
-                    connection.disconnect();
-                }
-                try {
-                    if(reader != null) {
-                        reader.close();
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
-            if (pDialog.isShowing()) {
-                pDialog.dismiss();
-            }
-            if(s.equals("No events found")) {
-                Toast.makeText(getContext(), "No events found", Toast.LENGTH_LONG).show();
-            } else {
-                MainActivity mainActivity = (MainActivity)getActivity();
-                mainActivity.loadEventSearchResultFragment(eventCardList);
-
-            }
         }
     }
 
