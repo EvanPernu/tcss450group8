@@ -222,7 +222,7 @@ public class MainActivity extends AppCompatActivity
                     == PackageManager.PERMISSION_GRANTED) {
                 mCurrentLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
                 System.out.println(mCurrentLocation + " fuck");
-                //if (mCurrentLocation != null) Log.i(TAG, mCurrentLocation.toString());
+                if (mCurrentLocation != null) Log.i("MAINONCONNECTED", mCurrentLocation.toString());
                 startLocationUpdates();
             }
         }

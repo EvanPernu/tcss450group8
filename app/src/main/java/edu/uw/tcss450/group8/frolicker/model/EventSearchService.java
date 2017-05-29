@@ -148,6 +148,11 @@ public class EventSearchService extends AsyncTask<String, String, String> {
         }
         if (s.equals("No events found")) {
             Toast.makeText(context.getApplicationContext(), "No events found", Toast.LENGTH_LONG).show();
+
+            //TODO temporary bug fix
+            MainActivity mainActivity = (MainActivity)context;
+            mainActivity.loadNextEventFragment(eventCardList,1);
+
         } else {
             MainActivity mainActivity = (MainActivity)context;
             //if(dialogMessage.contains("Logging")) {
