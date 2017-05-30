@@ -1,6 +1,8 @@
 package edu.uw.tcss450.group8.frolicker;
 
 import android.Manifest;
+import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
@@ -44,6 +46,8 @@ import edu.uw.tcss450.group8.frolicker.views.LoginFragment;
 import edu.uw.tcss450.group8.frolicker.views.LoginOrRegisterFragment;
 import edu.uw.tcss450.group8.frolicker.views.PrefsInitFragment;
 import edu.uw.tcss450.group8.frolicker.views.RegisterFragment;
+
+import static android.R.attr.dialogMessage;
 
 /**
  * The main activity that controls internal data, fragment display, click listeners, and AsyncTasks
@@ -107,10 +111,28 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        setupLocation();
+        //setupLocation();
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .build();
+        mLocationRequest = new LocationRequest();
+        mLocationRequest = new LocationRequest();
+        mLocationRequest.setInterval(UPDATE_INTERVAL_IN_MILLISECONDS);
+        mLocationRequest.setFastestInterval(FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS);
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION,
+                    Manifest.permission.ACCESS_FINE_LOCATION}, MY_PERMISSIONS_LOCATIONS);
+        }
 
         //create a new LoginFragment, load it
-        if(savedInstanceState == null) {
+        if (savedInstanceState == null) {
             if (findViewById(R.id.fragmentContainer) != null) {
                 getSupportFragmentManager().beginTransaction()
                         .add(R.id.fragmentContainer, new LoginOrRegisterFragment())
@@ -118,34 +140,6 @@ public class MainActivity extends AppCompatActivity
             }
         }
     }
-
-    public void setupLocation() {
-
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(LocationServices.API)
-                .build();
-
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.ACCESS_COARSE_LOCATION
-                            , Manifest.permission.ACCESS_FINE_LOCATION},
-                    MY_PERMISSIONS_LOCATIONS);
-        }
-
-        mLocationRequest = new LocationRequest();
-        mLocationRequest.setInterval(UPDATE_INTERVAL_IN_MILLISECONDS);
-        mLocationRequest.setFastestInterval(FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS);
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-
-    }
-
-
-
 
     protected void startLocationUpdates() {
         if (ActivityCompat.checkSelfPermission(this,
@@ -173,7 +167,17 @@ public class MainActivity extends AppCompatActivity
         switch (requestCode) {
             case MY_PERMISSIONS_LOCATIONS: {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // permission granted
+                    if (mCurrentLocation == null) {
+                        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                                == PackageManager.PERMISSION_GRANTED
+                                && ActivityCompat.checkSelfPermission(this,
+                                Manifest.permission.ACCESS_COARSE_LOCATION)
+                                == PackageManager.PERMISSION_GRANTED) {
+                            mCurrentLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+                            if (mCurrentLocation != null) Log.i("MAINONCONNECTED", mCurrentLocation.toString());
+                            startLocationUpdates();
+                        }
+                    }
                 } else {
                     // permission denied
                     Toast.makeText(this, "Locations need to be working for this portion, please provide permission", Toast.LENGTH_SHORT).show();
@@ -217,6 +221,7 @@ public class MainActivity extends AppCompatActivity
                     Manifest.permission.ACCESS_COARSE_LOCATION)
                     == PackageManager.PERMISSION_GRANTED) {
                 mCurrentLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+                Log.d("h", "onConnected: butt");
                 if (mCurrentLocation != null) Log.i("MAINONCONNECTED", mCurrentLocation.toString());
                 startLocationUpdates();
             }
@@ -240,24 +245,16 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onPrefsInitFragmentInteraction(String s, String theJSString) {
-        if(s.equals("upload")){
+        if (s.equals("upload")) {
             //upload their prefs to the server
             uploadInitPrefsTask task = new uploadInitPrefsTask();
             task.execute(ACTIVE_USER, theJSString);
 
             Log.d("main/upload", "about to log in");
 
-            if (mCurrentLocation == null) {
-                if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION)
-                        == PackageManager.PERMISSION_GRANTED
-                        && ActivityCompat.checkSelfPermission(context,
-                        Manifest.permission.ACCESS_COARSE_LOCATION)
-                        == PackageManager.PERMISSION_GRANTED) {
-                    mCurrentLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-                }
-            }
             // automatic search for events near current location when logging in
-            new EventSearchService(context,"Logging in...").execute(EVENTBRITE_URL + "?location.latitude="
+            Log.d("yah", "onPrefsInitFragmentInteraction: gag" + mCurrentLocation);
+            new EventSearchService(context, "Finding events...").execute(EVENTBRITE_URL + "?location.latitude="
                     + String.valueOf(mCurrentLocation.getLatitude()) + "&location.longitude="
                     + String.valueOf(mCurrentLocation.getLongitude()) + "&token="
                     + EVENTBRITE_KEY + "&expand=venue");
@@ -267,7 +264,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onHomeFragmentInteraction(int n) {
-        switch(n) {
+        switch (n) {
             case 1:
                 FragmentTransaction secondTransaction = getSupportFragmentManager().beginTransaction()
                         .replace(R.id.fragmentContainer, new EventSearchFragment())
@@ -289,6 +286,7 @@ public class MainActivity extends AppCompatActivity
      */
     private class uploadInitPrefsTask extends AsyncTask<String, Void, String> {
         private final String SERVICE = "PrefsInitUpload.php";
+
         @Override
         protected String doInBackground(String... strings) {
             if (strings.length != 2) {
@@ -298,7 +296,7 @@ public class MainActivity extends AppCompatActivity
             HttpURLConnection urlConnection = null;
             String url = strings[0];
             try {
-                URL urlObject = new URL(DB_URL + SERVICE + "?my_u="+strings[0]);
+                URL urlObject = new URL(DB_URL + SERVICE + "?my_u=" + strings[0]);
 
                 urlConnection = (HttpURLConnection) urlObject.openConnection();
                 urlConnection.setRequestMethod("POST");
@@ -327,7 +325,6 @@ public class MainActivity extends AppCompatActivity
         }
 
 
-
         @Override
         protected void onPostExecute(String result) {
             // Something wrong with the network or the URL.
@@ -336,16 +333,15 @@ public class MainActivity extends AppCompatActivity
                         .show();
                 return;
             }
-    }
+        }
     }
 
 
     /**
-     *  called when user clicks search button
+     * called when user clicks search button
      *
-     *  @param eventCardList a list of each event in card form
-     *
-     *  @author Tim Weaver
+     * @param eventCardList a list of each event in card form
+     * @author Tim Weaver
      */
     // loads fragments that require event data
     public void loadNextEventFragment(List<EventCard> eventCardList, int frag) {
@@ -384,13 +380,13 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-
     /**
      * Does different things based on the fragment we want to go to.
      * 2: Login
      * 3: Register
      * 4: Attempting login
      * 5: Attempting register
+     *
      * @param theFrag
      * @author Chris Dale
      */
@@ -421,15 +417,14 @@ public class MainActivity extends AppCompatActivity
                 break;
             case 4:
                 // quick login
-
+                Log.d("g", "onFragmentInteraction: dick" + mCurrentLocation);
                 EditText editUsername = (EditText) findViewById(R.id.editUsername);
                 EditText editPassword = (EditText) findViewById(R.id.editPassword);
 
                 String usernameString = editUsername.getText().toString();
                 String passwordString = editPassword.getText().toString();
 
-                if (passwordString.equals("") || usernameString.equals(""))
-                {
+                if (passwordString.equals("") || usernameString.equals("")) {
                     // Warn the user.
                     new AlertDialog.Builder(this)
                             .setTitle("Warning")
@@ -441,11 +436,9 @@ public class MainActivity extends AppCompatActivity
                             })
                             .setIcon(android.R.drawable.ic_dialog_alert)
                             .show();
-                }
-                else
-                {
+                } else {
                     Log.d("onFragmentInteraction", "Attempting Login");
-
+                    Log.d("t", "onFragmentInteraction: ass" + mCurrentLocation);
                     task = new LoginWebServiceTask();
                     task.execute(PARTIAL_LOGIN_URL, usernameString, passwordString);
                 }
@@ -459,10 +452,9 @@ public class MainActivity extends AppCompatActivity
                 String passwordRegisString = editRegisPassword.getText().toString();
                 String confirmRegisString = editRegisConfirm.getText().toString();
 
-                if (       passwordRegisString.equals("")
+                if (passwordRegisString.equals("")
                         || usernameRegisString.equals("")
-                        || confirmRegisString.equals(""))
-                {
+                        || confirmRegisString.equals("")) {
                     // Warn the user.
                     new AlertDialog.Builder(this)
                             .setTitle("Warning")
@@ -474,9 +466,7 @@ public class MainActivity extends AppCompatActivity
                             })
                             .setIcon(android.R.drawable.ic_dialog_alert)
                             .show();
-                }
-                else if (!passwordRegisString.equals(confirmRegisString))
-                {
+                } else if (!passwordRegisString.equals(confirmRegisString)) {
                     // Warn the user.
                     new AlertDialog.Builder(this)
                             .setTitle("Warning")
@@ -488,9 +478,7 @@ public class MainActivity extends AppCompatActivity
                             })
                             .setIcon(android.R.drawable.ic_dialog_alert)
                             .show();
-                }
-                else if (passwordRegisString.length() < 8)
-                {
+                } else if (passwordRegisString.length() < 8) {
                     // Warn the user.
                     new AlertDialog.Builder(this)
                             .setTitle("Warning")
@@ -502,9 +490,7 @@ public class MainActivity extends AppCompatActivity
                             })
                             .setIcon(android.R.drawable.ic_dialog_alert)
                             .show();
-                }
-                else
-                {
+                } else {
                     task = new RegisterWebServiceTask();
                     task.execute(PARTIAL_LOGIN_URL, usernameRegisString, passwordRegisString);
                 }
@@ -521,6 +507,18 @@ public class MainActivity extends AppCompatActivity
     private class RegisterWebServiceTask extends AsyncTask<String, Void, String> {
         private final String SERVICE = "_register.php";
         private String mUsername;
+        private ProgressDialog pDialog;
+
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pDialog = new ProgressDialog(context);
+            pDialog.setMessage("Registering...");
+            pDialog.setIndeterminate(false);
+            pDialog.setCancelable(true);
+            pDialog.show();
+        }
 
         @Override
         protected String doInBackground(String... strings) {
@@ -570,13 +568,19 @@ public class MainActivity extends AppCompatActivity
 
         @Override
         protected void onPostExecute(String result) {
+
+            if (pDialog.isShowing()) {
+                pDialog.dismiss();
+            }
+
             // Something wrong with the network or the URL.
             if (result.startsWith("Unable to")) {
                 Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG).show();
                 return;
             }
 
-            if(result.equals("success")){
+
+            if (result.equals("success")) {
                 //successful registration
                 Toast.makeText(getApplicationContext(), "Registration success!", Toast.LENGTH_LONG)
                         .show();
@@ -593,11 +597,11 @@ public class MainActivity extends AppCompatActivity
                 // Commit the transaction
                 loginTransaction.commit();
 
-            }else if(result.equals("fail")){
+            } else if (result.equals("fail")) {
                 //unsuccessful registration for other (unknown/error) reasons
                 Toast.makeText(getApplicationContext(), "Registration failed. There was an error.", Toast.LENGTH_LONG)
                         .show();
-            }else if(result.equals("taken")){
+            } else if (result.equals("taken")) {
                 //unsuccessful registration, username is taken
                 Toast.makeText(getApplicationContext(), "This username is already taken :(", Toast.LENGTH_LONG)
                         .show();
@@ -611,12 +615,29 @@ public class MainActivity extends AppCompatActivity
      * @author Chris Dale
      * @author Evan Pernu
      */
-    private class LoginWebServiceTask extends AsyncTask<String, Void, String> {
+    class LoginWebServiceTask extends AsyncTask<String, Void, String> {
         private final String SERVICE = "_login.php";
+        private ProgressDialog pDialog;
         private String mUsername;
+
+        public LoginWebServiceTask() {
+
+
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pDialog = new ProgressDialog(context);
+            pDialog.setMessage("Logging in...");
+            pDialog.setIndeterminate(false);
+            pDialog.setCancelable(true);
+            pDialog.show();
+        }
 
         @Override
         protected String doInBackground(String... strings) {
+
 
             if (strings.length != 3) {
                 throw new IllegalArgumentException("Three String arguments required.");
@@ -653,8 +674,7 @@ public class MainActivity extends AppCompatActivity
                 if (urlConnection != null) urlConnection.disconnect();
             }
 
-            Log.d("doInBackground", "Finished. reponse = "+response);
-
+            Log.d("doInBackground", "Finished. reponse = " + response);
 
             return response;
         }
@@ -662,32 +682,31 @@ public class MainActivity extends AppCompatActivity
         @Override
         protected void onPostExecute(String result) {
             // Something wrong with the network or the URL.
+            if (pDialog.isShowing()) {
+                pDialog.dismiss();
+            }
             if (result.startsWith("Unable to")) {
                 Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG).show();
                 return;
             }
-            
-            if(result.equals("success")){
+
+            if (result.equals("success")) {
+
+                //succesful login
+                Toast.makeText(getApplicationContext(), "Login successful.", Toast.LENGTH_LONG)
+                        .show();
+
                 //set active user
                 ACTIVE_USER = mUsername;
 
 
-                if (mCurrentLocation == null) {
-                    if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION)
-                            == PackageManager.PERMISSION_GRANTED
-                            && ActivityCompat.checkSelfPermission(context,
-                            Manifest.permission.ACCESS_COARSE_LOCATION)
-                            == PackageManager.PERMISSION_GRANTED) {
-                        mCurrentLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-                    }
-                }
-                // automatic search for events near current location when logging in
-                new EventSearchService(context,"Logging in...").execute(EVENTBRITE_URL + "?location.latitude="
+                // automatically search for events near current location when logging in
+                new EventSearchService(context, "Finding events...").execute(EVENTBRITE_URL + "?location.latitude="
                         + String.valueOf(mCurrentLocation.getLatitude()) + "&location.longitude="
-                        + String.valueOf(mCurrentLocation.getLongitude()) + "&location.within="+DEFUALT_SEARCH_RADIUS+"&token="
+                        + String.valueOf(mCurrentLocation.getLongitude()) + "&location.within=" + DEFUALT_SEARCH_RADIUS + "&token="
                         + EVENTBRITE_KEY + "&expand=venue");
 
-            }else if(result.equals("fail")){
+            } else if (result.equals("fail")) {
                 //unsuccessful login
                 Toast.makeText(getApplicationContext(), "Login failed.", Toast.LENGTH_LONG)
                         .show();
@@ -696,37 +715,36 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-
     /**
      * Builds a map of every category as well as its EventBrite ID.
      * These values are hard coded to eliminate the need for another api call.
      *
      * @return a map of every category as well as its EventBrite ID
      */
-    public static Map<String, Integer> initCategories(){
+    public static Map<String, Integer> initCategories() {
         Map<String, Integer> mCategories = new HashMap<String, Integer>();
 
         mCategories = new HashMap<String, Integer>();
-        mCategories.put("Music",103);
-        mCategories.put("Business & Professional",101);
-        mCategories.put("Food & Drink",110);
-        mCategories.put("Community & Culture",113);
-        mCategories.put("Performing & Visual Arts",105);
-        mCategories.put("Film, Media & Entertainment",104);
-        mCategories.put("Sports & Fitness",108);
-        mCategories.put("Health & Wellness",107);
-        mCategories.put("Science & Technology",102);
-        mCategories.put("Travel & Outdoor",109);
-        mCategories.put("Charity & Causes",111);
-        mCategories.put("Religion & Spirituality",114);
-        mCategories.put("Family & Education",115);
-        mCategories.put("Seasonal & Holiday",116);
-        mCategories.put("Government & Politics",112);
-        mCategories.put("Fashion & Beauty",106);
-        mCategories.put("Home & Lifestyle",117);
-        mCategories.put("Auto, Boat & Air",118);
-        mCategories.put("Hobbies & Special Interest",119);
-        mCategories.put("Other",199);
+        mCategories.put("Music", 103);
+        mCategories.put("Business & Professional", 101);
+        mCategories.put("Food & Drink", 110);
+        mCategories.put("Community & Culture", 113);
+        mCategories.put("Performing & Visual Arts", 105);
+        mCategories.put("Film, Media & Entertainment", 104);
+        mCategories.put("Sports & Fitness", 108);
+        mCategories.put("Health & Wellness", 107);
+        mCategories.put("Science & Technology", 102);
+        mCategories.put("Travel & Outdoor", 109);
+        mCategories.put("Charity & Causes", 111);
+        mCategories.put("Religion & Spirituality", 114);
+        mCategories.put("Family & Education", 115);
+        mCategories.put("Seasonal & Holiday", 116);
+        mCategories.put("Government & Politics", 112);
+        mCategories.put("Fashion & Beauty", 106);
+        mCategories.put("Home & Lifestyle", 117);
+        mCategories.put("Auto, Boat & Air", 118);
+        mCategories.put("Hobbies & Special Interest", 119);
+        mCategories.put("Other", 199);
 
         return mCategories;
     }
