@@ -3,6 +3,7 @@ package edu.uw.tcss450.group8.frolicker.views;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CheckedTextView;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.ListView;
@@ -109,12 +111,19 @@ public class EventSearchFragment extends Fragment {
      */
     private String mCurrentLocation = "";
 
+    /**
+     * Stores currently selected categories
+     */
+    private ArrayList<String> mCategories;
+
     public EventSearchFragment() {
         // Required empty public constructor
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        mCategories = new ArrayList<String>();
+
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         Bundle args = this.getArguments();
@@ -216,18 +225,32 @@ public class EventSearchFragment extends Fragment {
         });
 
 
+        //initialize category checkboxes
         ArrayList<String> categoryOptions = new ArrayList<String>();
 
         for(String s : MainActivity.initCategories().keySet()){
             categoryOptions.add(s);
         }
 
-        // set adapter for listview
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), R.layout.checklist_row, R.id.txtCategoryList, categoryOptions);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+                getContext(), R.layout.checklist_row,  categoryOptions);
         categoriesList.setAdapter(adapter);
         categoriesList.setItemsCanFocus(false);
-        // we want multiple clicks
         categoriesList.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+
+        categoriesList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                CheckedTextView ctv = (CheckedTextView) view;
+                if(ctv.isChecked()){
+                    mCategories.add(ctv.getText().toString());
+                    Log.d("CBC add", "mCategories is now"+mCategories);
+                }else{
+                    mCategories.remove(ctv.getText().toString());
+                    Log.d("CBC remove", "mCategories is now"+mCategories);
+                }
+            }
+        });
 
 
 
@@ -240,9 +263,6 @@ public class EventSearchFragment extends Fragment {
       *     selects the proper API request for the user search
       */
     private void searchInit() {
-
-
-
         String event = etEventSearch.getText().toString();
         String location = etLocationSearch.getText().toString();
         String distance;
@@ -250,11 +270,55 @@ public class EventSearchFragment extends Fragment {
         String startDateKeyword;
         String dialogMessage = "Finding events...";
 
+        //if the user has not input any valid search criteria, show a message and return
+        if(event.equals("") && location.equals("") && mCategories.isEmpty()){
+            Toast.makeText(getContext(), "Enter event or location", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        //build the search parameter URL based on criteria
+        StringBuilder URL = new StringBuilder(EVENTBRITE_URL
+                + "?token=" + EVENTBRITE_KEY + translateOrder(mOrder)
+                + "&location.within="+mDistance+"mi");
+
+        if(!event.equals("")){
+            URL.append("&q=");
+            URL.append(event);
+        }
+
+        if(!mCategories.isEmpty()){
+            URL.append("&categories=");
+            ArrayList<Integer> idList = MainActivity.convertCategories(mCategories);
+
+            for(int i = 0; i < idList.size(); i++){
+                URL.append(idList.get(i));
+                if(i != idList.size()-1){
+                    URL.append(",");  //TODO fence post wrong?
+                }
+            }
+        }
+
+        if(location.equals("")){
+            URL.append(mCurrentLocation);
+        }else{
+            URL.append("&location.address=");
+            URL.append(location);
+        }
+
+        new EventSearchService(getContext(),dialogMessage).execute(URL.toString());
+
+        /*
+         etEventSearch = (EditText) view.findViewById(R.id.editTextEvent);
+        etLocationSearch = (EditText) view.findViewById(R.id.editTextLocation);
+        searchButton = (Button) view.findViewById(R.id.searchButton);
+        distanceBar = (SeekBar) view.findViewById(R.id.barSearchDistance);
+        distanceTxt = (TextView) view.findViewById(R.id.txtSearchDistance);
+        orderSpinner = (Spinner) view.findViewById(R.id.spinnerOrder);
+        categoriesList = (ListView) view.findViewById(R.id.listCategories);
+        expandButton = (Button) view.findViewById(R.id.btnSearchOptions);
 
 
         switch(validateInput(event, location)) {
-
-            //there is no user input
             case 0 :
                 Toast.makeText(getContext(), "Enter event or location", Toast.LENGTH_LONG).show();
                 break;
@@ -277,6 +341,7 @@ public class EventSearchFragment extends Fragment {
             default:
                 break;
         }
+
     }
 
     private int validateInput(String event, String location) {
@@ -290,6 +355,7 @@ public class EventSearchFragment extends Fragment {
         } else {
             return 3;
         }
+        */
     }
 
     /**

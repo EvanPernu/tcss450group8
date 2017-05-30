@@ -33,6 +33,7 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -757,6 +758,20 @@ public class MainActivity extends AppCompatActivity
         mCategories.put("Other", 199);
 
         return mCategories;
+    }
+
+    /**
+     * helper method that converts EventBrite category names to their corresponding ID numbers.
+     * @param categoryList a List of category names
+     * @return a list of corresponding ID numbers
+     */
+    public static ArrayList<Integer> convertCategories(ArrayList<String> categoryList){
+        ArrayList<Integer> res = new ArrayList<Integer>();
+
+        for(String s : initCategories().keySet()){
+            res.add(initCategories().get(s));
+        }
+        return res;
     }
 
     /**

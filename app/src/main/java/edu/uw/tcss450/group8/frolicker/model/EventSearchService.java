@@ -141,7 +141,7 @@ public class EventSearchService extends AsyncTask<String, String, String> {
         if (pDialog.isShowing()) {
             pDialog.dismiss();
         }
-        if (s.equals("No events found")) {
+        if (s != null && s.equals("No events found")) {
             Toast.makeText(context.getApplicationContext(), "No events found", Toast.LENGTH_LONG).show();
 
         } else {
