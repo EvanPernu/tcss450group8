@@ -279,7 +279,7 @@ public class EventSearchFragment extends Fragment {
         //build the search parameter URL based on criteria
         StringBuilder URL = new StringBuilder(EVENTBRITE_URL
                 + "?token=" + EVENTBRITE_KEY + translateOrder(mOrder)
-                + "&location.within="+mDistance+"mi");
+                + "&location.within="+mDistance+"mi"+"&expand=venue");
 
         if(!event.equals("")){
             URL.append("&q=");
@@ -293,7 +293,7 @@ public class EventSearchFragment extends Fragment {
             for(int i = 0; i < idList.size(); i++){
                 URL.append(idList.get(i));
                 if(i != idList.size()-1){
-                    URL.append(",");  //TODO fence post wrong?
+                    URL.append(",");
                 }
             }
         }
@@ -305,6 +305,7 @@ public class EventSearchFragment extends Fragment {
             URL.append(location);
         }
 
+        Log.d("ESF about to search", "URL =     "+URL.toString());
         new EventSearchService(getContext(),dialogMessage).execute(URL.toString());
 
         /*

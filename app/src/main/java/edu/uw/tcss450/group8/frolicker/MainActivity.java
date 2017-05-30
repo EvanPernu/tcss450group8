@@ -712,6 +712,10 @@ public class MainActivity extends AppCompatActivity
 
 
                 // automatically search for events near current location when logging in
+
+                //TODO add liked categories as a parameter, and a random # of maybe categories
+
+
                 new EventSearchService(context, "Finding events...").execute(EVENTBRITE_URL + "?location.latitude="
                         + String.valueOf(mCurrentLocation.getLatitude()) + "&location.longitude="
                         + String.valueOf(mCurrentLocation.getLongitude()) + "&location.within=" + DEFUALT_SEARCH_RADIUS + "&token="
