@@ -266,8 +266,14 @@ public class MainActivity extends AppCompatActivity
     public void onHomeFragmentInteraction(int n) {
         switch (n) {
             case 1:
+                EventSearchFragment mEventSearchFragment = new EventSearchFragment();
+                mEventSearchFragment.setRetainInstance(true);
+                Bundle bundle = new Bundle();
+                bundle.putString("loc", getCurrentLocation());
+                mEventSearchFragment.setArguments(bundle);
+
                 FragmentTransaction secondTransaction = getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fragmentContainer, new EventSearchFragment())
+                        .replace(R.id.fragmentContainer, mEventSearchFragment)
                         .addToBackStack(null);
                 secondTransaction.commit();
                 break;
@@ -351,6 +357,10 @@ public class MainActivity extends AppCompatActivity
             case 0:
                 EventSearchFragment mEventSearchFragment = new EventSearchFragment();
                 mEventSearchFragment.setRetainInstance(true);
+                Bundle bundle = new Bundle();
+                bundle.putString("loc", getCurrentLocation());
+                mEventSearchFragment.setArguments(bundle);
+
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainer, mEventSearchFragment
                 ).addToBackStack(null).commit();
                 break;
@@ -748,4 +758,14 @@ public class MainActivity extends AppCompatActivity
 
         return mCategories;
     }
+
+    /**
+     * private helper that fetches current location in EventBrite URL form
+     * @return current location in EventBrite URL form
+     */
+    private String getCurrentLocation(){
+        return "&location.latitude=" + String.valueOf(mCurrentLocation.getLatitude()) +
+                "&location.longitude=" + String.valueOf(mCurrentLocation.getLongitude());
+    }
+
 }

@@ -193,13 +193,10 @@ public class EventSearchFragment extends Fragment {
                     //expandButton.setCompoundDrawablesWithIntrinsicBounds( R.drawable., 0, 0, 0);
 
                 }else{
-                    //if the expanded options are shown, reset and collapse them
+                    //if the expanded options are shown, collapse them
                     etLocationSearch.setVisibility(View.GONE);
                     orderSpinner.setVisibility(View.GONE);
                     categoriesList.setVisibility(View.GONE);
-
-                    etLocationSearch.setText(null);
-                    //TODO set spinner to default option, uncheck all categories
                 }
             }
         });
