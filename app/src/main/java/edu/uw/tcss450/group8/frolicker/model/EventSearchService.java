@@ -3,6 +3,7 @@ package edu.uw.tcss450.group8.frolicker.model;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -54,6 +55,7 @@ public class EventSearchService extends AsyncTask<String, String, String> {
         BufferedReader reader = null;
         try {
             URL url = new URL(params[0]);
+            Log.d("EventSearchService", "URL =       "+url.toString());
             connection = (HttpURLConnection) url.openConnection();
             connection.connect();
 

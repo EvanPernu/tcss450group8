@@ -17,25 +17,31 @@
         android:layout_marginTop="16dp"
         android:drawableRight="@android:drawable/ic_menu_search"
         android:ems="10"
-        android:hint="Find Events Near Me"
+        android:hint="@string/hint_search"
         android:inputType="textPersonName"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginLeft="8dp"
         app:layout_constraintLeft_toLeftOf="parent"
         android:layout_marginRight="8dp"
-        app:layout_constraintRight_toRightOf="parent" />
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp" />
 
     <EditText
         android:id="@+id/editTextLocation"
-        android:layout_width="wrap_content"
+        android:layout_width="368dp"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="Location"
-        android:inputType="textPersonName"
         android:layout_marginTop="8dp"
-        app:layout_constraintTop_toBottomOf="@+id/btnSearchOptions"
+        android:ems="10"
+        android:hint="@string/hint_location"
+        android:inputType="textPersonName"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnSearchOptions"
+        android:layout_marginRight="24dp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp" />
 
     <!--<EditText-->
         <!--android:id="@+id/editText"-->
@@ -52,7 +58,7 @@
         android:layout_marginBottom="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
-        android:text="Search"
+        android:text="@string/action_search"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -76,24 +82,28 @@
         android:id="@+id/txtSearchDistance"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Within 10 miles"
+        android:layout_marginTop="24dp"
+        android:text="dist"
+        app:layout_constraintHorizontal_bias="0.501"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginTop="24dp"
-        app:layout_constraintTop_toBottomOf="@+id/editTextEvent"
-        app:layout_constraintHorizontal_bias="0.501" />
+        app:layout_constraintTop_toBottomOf="@+id/editTextEvent" />
 
     <Button
         android:id="@+id/btnSearchOptions"
-        android:layout_width="wrap_content"
+        style="@style/ButtonTheme2"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:drawableRight="@android:drawable/ic_menu_more"
-        android:text="More Search Options."
+        android:text="@string/expand_search"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/barSearchDistance"
-        app:layout_constraintHorizontal_bias="0.503" />
+        android:layout_marginLeft="24dp"
+        android:layout_marginRight="24dp"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp" />
 
     <Spinner
         android:id="@+id/spinnerOrder"
@@ -102,18 +112,27 @@
         android:layout_marginTop="8dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextLocation" />
+        app:layout_constraintTop_toBottomOf="@+id/editTextLocation"
+        app:layout_constraintHorizontal_bias="0.0"
+        android:layout_marginRight="24dp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp" />
 
     <ListView
         android:id="@+id/listCategories"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginBottom="8dp"
-        android:layout_marginTop="0dp"
         app:layout_constraintBottom_toTopOf="@+id/searchButton"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/spinnerOrder" />
+        app:layout_constraintTop_toBottomOf="@+id/spinnerOrder"
+        app:layout_constraintVertical_bias="0.0"
+        android:layout_marginRight="24dp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp" />
 
 </android.support.constraint.ConstraintLayout>

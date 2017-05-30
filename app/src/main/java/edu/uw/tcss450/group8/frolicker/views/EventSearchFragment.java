@@ -1,11 +1,15 @@
 package edu.uw.tcss450.group8.frolicker.views;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.ListView;
@@ -17,7 +21,9 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
+import edu.uw.tcss450.group8.frolicker.MainActivity;
 import edu.uw.tcss450.group8.frolicker.R;
 import edu.uw.tcss450.group8.frolicker.model.EventSearchService;
 
@@ -93,8 +99,28 @@ public class EventSearchFragment extends Fragment {
      */
     private int mDistance = 10;
 
+    /**
+     * This determines the order results are displayed in
+     */
+    private String mOrder = "Date(soonest)";
+
+    /**
+     * This stores the user's current location in EventBrite URL format
+     */
+    private String mCurrentLocation = "";
+
     public EventSearchFragment() {
         // Required empty public constructor
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+        Bundle args = this.getArguments();
+        if (args != null) {
+            mCurrentLocation=args.getString("loc");
+        }
     }
 
 
@@ -103,8 +129,8 @@ public class EventSearchFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_event_search, container, false);
+        //create references to UI elementstainer, false);
 
-        //create references to UI elements
         etEventSearch = (EditText) view.findViewById(R.id.editTextEvent);
         etLocationSearch = (EditText) view.findViewById(R.id.editTextLocation);
         searchButton = (Button) view.findViewById(R.id.searchButton);
@@ -116,6 +142,11 @@ public class EventSearchFragment extends Fragment {
 
         //initialize UI elements
         distanceTxt.setText("Within "+mDistance+" miles");
+        final ArrayAdapter<CharSequence> spinAdapter = ArrayAdapter.createFromResource(
+                getContext(), R.array.search_order_options_array, android.R.layout.simple_spinner_item);
+        spinAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        orderSpinner.setAdapter(spinAdapter);
+
 
         //hide expanded options
         etLocationSearch.setVisibility(View.GONE);
@@ -173,6 +204,38 @@ public class EventSearchFragment extends Fragment {
             }
         });
 
+        orderSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                String[] options = getResources().getStringArray(R.array.search_order_options_array);
+                mOrder = options[parentView.getSelectedItemPosition()];
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+                //this should not be called
+            }
+
+        });
+
+
+        ArrayList<String> categoryOptions = new ArrayList<String>();
+
+        for(String s : MainActivity.initCategories().keySet()){
+            categoryOptions.add(s);
+        }
+
+        // set adapter for listview
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), R.layout.checklist_row, R.id.txtCategoryList, categoryOptions);
+        categoriesList.setAdapter(adapter);
+        categoriesList.setItemsCanFocus(false);
+        // we want multiple clicks
+        categoriesList.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+
+
+
+
+
         return view;
     }
 
@@ -200,16 +263,19 @@ public class EventSearchFragment extends Fragment {
                 break;
             case 1:
                 new EventSearchService(getContext(),dialogMessage).execute(EVENTBRITE_URL + "?location.address="
-                        + location + "&token=" + EVENTBRITE_KEY + "&expand=venue");
+                        + location + "&token=" + EVENTBRITE_KEY + "&expand=venue"
+                        +mCurrentLocation+translateOrder(mOrder)+"&location.within="+mDistance+"mi");
                 break;
             case 2:
                 new EventSearchService(getContext(),dialogMessage).execute(EVENTBRITE_URL + "?q="
-                        + event + "&token=" + EVENTBRITE_KEY + "&expand=venue");
+                        + event + "&token=" + EVENTBRITE_KEY + "&expand=venue"
+                        +mCurrentLocation+translateOrder(mOrder)+"&location.within="+mDistance+"mi");
                 break;
             case 3:
                 new EventSearchService(getContext(),dialogMessage).execute(EVENTBRITE_URL + "?q="
                         + event + "&location.address=" + location + "&token="
-                        + EVENTBRITE_KEY + "&expand=venue");
+                        + EVENTBRITE_KEY + "&expand=venue"
+                        +translateOrder(mOrder)+"&location.within="+mDistance+"mi");
                 break;
             default:
                 break;
@@ -229,4 +295,26 @@ public class EventSearchFragment extends Fragment {
         }
     }
 
+    /**
+     * Private helper method that translates the user's order selection into EventBrite URL language
+     * @param input the user order selection
+     * @return the corresponding EventBrite URL term
+     */
+    private String translateOrder(String input){
+        String result;
+
+        if(input.equals("Date (soonest)")){
+            result = "date";
+        }else if(input.equals("Date (latest)")){
+            result = "-date";
+        }else if(input.equals("Distance (near to far)")){
+            result = "distance";
+        }else if(input.equals("Distance (far to near)")){
+            result = "-distance";
+        }else{
+            result = "best";
+        }
+
+        return "&sort_by="+result;
+    }
 }

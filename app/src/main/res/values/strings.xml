@@ -14,12 +14,25 @@
 
     <string name="response">"responseKey"</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="title_activity_main2">Main2Activity</string>
-
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_settings">Settings</string>
+
+    <string name="expand_search">More Options</string>
+
+    <string name="action_search">Search</string>
+    <string name="hint_location">Location</string>
+    <string name="hint_search">Search for Events</string>
+
+
+
+    <string-array name="search_order_options_array">
+        <item>Date (soonest)</item>
+        <item>Date (latest)</item>
+        <item>Distance (near to far)</item>
+        <item>Distance (far to near)</item>
+        <item>Most Relevant</item>
+    </string-array>
+
 </resources>

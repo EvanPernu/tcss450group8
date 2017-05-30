@@ -21,6 +21,18 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+    <!-- Style for background buttons -->
+    <style name="ButtonTheme2" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="android:background">@drawable/button_shape_2</item>
+        <item name="android:textColor">@color/offWhite</item>
+        <item name="android:textSize">22sp</item>
+    </style>
+
+
+
+    android:background="@color/background"
+    android:textColor="@color/offWhite"
+
     <!--<style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />-->
 
     <!--<style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />-->
