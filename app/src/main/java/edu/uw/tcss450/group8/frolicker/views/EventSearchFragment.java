@@ -138,8 +138,7 @@ public class EventSearchFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_event_search, container, false);
-        //create references to UI elementstainer, false);
-
+        //create references to UI elementstainer, false)
         etEventSearch = (EditText) view.findViewById(R.id.editTextEvent);
         etLocationSearch = (EditText) view.findViewById(R.id.editTextLocation);
         searchButton = (Button) view.findViewById(R.id.searchButton);

@@ -18,6 +18,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
+import android.view.MenuItem;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -158,6 +159,26 @@ public class MainActivity extends AppCompatActivity
                         .commit();
             }
         }
+
+        MenuItem logout = (MenuItem)findViewById(R.id.logout);
+        logout.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                Toast.makeText(getApplicationContext(), "Logged Out", Toast.LENGTH_LONG)
+                        .show();
+                SharedPreferences sharedSettings = getSharedPreferences(PREFS_NAME, 0);
+                SharedPreferences.Editor editor = sharedSettings.edit();
+                //clear the login details
+                editor.remove(GET_USERNAME);
+                editor.remove(GET_PASSWORD);
+
+                getSupportFragmentManager().beginTransaction()
+                        .add(R.id.fragmentContainer, new LoginOrRegisterFragment())
+                        .commit();
+                //Return to login or register
+                return true;
+            }
+        });
     }
 
     protected void startLocationUpdates() {

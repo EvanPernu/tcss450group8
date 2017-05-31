@@ -25,6 +25,9 @@
     <string name="hint_location">Location</string>
     <string name="hint_search">Search for Events</string>
     <string name="remember_me">Remember Me</string>
+    <string name="logout">Logout</string>
+    <string name="map_view">Map View</string>
+    <string name="new_search">New Search</string>
 
 
     <string-array name="search_order_options_array">
