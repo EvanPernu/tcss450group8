@@ -54,6 +54,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             android:text="@string/remember_me"
+            android:textColor="@color/textSecondary"
             app:layout_constraintHorizontal_bias="0.361"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"

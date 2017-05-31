@@ -6,6 +6,7 @@
         <item name="android:textColor">@color/offWhite</item>
         <item name="android:textSize">15sp</item>
         <item name="android:editTextColor">@color/offWhite</item>
+
         <item name="android:textColorHint">@color/textSecondary</item>
     </style>
 
@@ -30,18 +31,18 @@
 
 
 
-    android:background="@color/background"
+    <!--android:background="@color/background"-->
     android:textColor="@color/offWhite"
 
     <!--<style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />-->
 
     <!--<style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />-->
 
-    <!-- Styles for all EditText -->
-    <!--<style name="EditTextStyle" >-->
-    <!--<item name="android:layout_width">match_parent</item>-->
-    <!--<item name="android:layout_height">wrap_content</item>-->
-    <!--<item name="android:textSize">25sp</item>-->
-    <!--<item name="android:textColor">@color/offWhite</item>-->
-    <!--</style>-->
+     Styles for all EditText
+    <style name="EditTextStyle" >
+    <item name="android:layout_width">match_parent</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:textSize">15sp</item>
+    <item name="android:textColor">@color/cardText</item>
+    </style>
 </resources>
