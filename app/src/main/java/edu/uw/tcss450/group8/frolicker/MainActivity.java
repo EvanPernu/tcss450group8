@@ -160,25 +160,6 @@ public class MainActivity extends AppCompatActivity
             }
         }
 
-        MenuItem logout = (MenuItem)findViewById(R.id.logout);
-        logout.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                Toast.makeText(getApplicationContext(), "Logged Out", Toast.LENGTH_LONG)
-                        .show();
-                SharedPreferences sharedSettings = getSharedPreferences(PREFS_NAME, 0);
-                SharedPreferences.Editor editor = sharedSettings.edit();
-                //clear the login details
-                editor.remove(GET_USERNAME);
-                editor.remove(GET_PASSWORD);
-
-                getSupportFragmentManager().beginTransaction()
-                        .add(R.id.fragmentContainer, new LoginOrRegisterFragment())
-                        .commit();
-                //Return to login or register
-                return true;
-            }
-        });
     }
 
     protected void startLocationUpdates() {
@@ -436,7 +417,7 @@ public class MainActivity extends AppCompatActivity
      * 3: Register
      * 4: Attempting login
      * 5: Attempting register
-     *
+     * 6: Logout
      * @param theFrag
      * @author Chris Dale
      */
@@ -558,6 +539,17 @@ public class MainActivity extends AppCompatActivity
                     task = new RegisterWebServiceTask();
                     task.execute(PARTIAL_LOGIN_URL, usernameRegisString, passwordRegisString);
                 }
+                break;
+            case 6:
+                SharedPreferences sharedSettings = getSharedPreferences(PREFS_NAME, 0);
+                SharedPreferences.Editor editor = sharedSettings.edit();
+                //clear the login details
+                editor.remove(GET_USERNAME);
+                editor.remove(GET_PASSWORD);
+
+                getSupportFragmentManager().beginTransaction()
+                        .add(R.id.fragmentContainer, new LoginOrRegisterFragment())
+                        .commit();
                 break;
         }
     }

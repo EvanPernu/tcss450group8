@@ -2,6 +2,7 @@ package edu.uw.tcss450.group8.frolicker.views;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -14,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -62,6 +64,7 @@ public class HomeFragment extends Fragment  implements View.OnClickListener {
         if (args != null) {
             mUsername = args.getString("name");
         }
+
     }
 
     @Override
@@ -131,6 +134,9 @@ public class HomeFragment extends Fragment  implements View.OnClickListener {
                 mainActivity.loadNextEventFragment(eventCardList,0);
                 break;
 
+            case R.id.logout:
+                mainActivity = (MainActivity)getContext();
+                mainActivity.onFragmentInteraction(6);
             default:
                 break;
 
