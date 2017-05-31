@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.AsyncTask;
@@ -17,6 +18,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -97,6 +99,22 @@ public class MainActivity extends AppCompatActivity
      * The default search distance for events, in miles
      */
     private static final String DEFUALT_SEARCH_RADIUS = "10mi";
+
+
+    private static final String PREFS_NAME = "REMEMBERED_USER";
+    /**
+     *
+     * Getting the username from shared preferences
+     */
+    private static String GET_USERNAME = "SAVED_USER";
+
+    /**
+     * Getting the password from shared preferences
+     */
+    private static String GET_PASSWORD = "SAVED_PASSWORD";
+
+    //I know it's dumb to save values like that, but we're already doing plaintext passwords,
+    // this isn't exactly secure.
 
     //private LocationServices mLocation;
     public static final long UPDATE_INTERVAL_IN_MILLISECONDS = 10000;
@@ -410,7 +428,12 @@ public class MainActivity extends AppCompatActivity
         switch (theFrag) {
 
             case 2:
-
+                SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+                if(settings.contains(GET_USERNAME) && settings.contains(GET_PASSWORD)){
+                    //if we have a username and pw saved, don't load the fragment, just go
+                    task = new LoginWebServiceTask();
+                    task.execute(PARTIAL_LOGIN_URL, settings.getString(GET_USERNAME, ""), settings.getString(GET_PASSWORD, ""));
+                }
 
                 LoginFragment loginFragment = new LoginFragment();
                 FragmentTransaction secondTransaction = getSupportFragmentManager().beginTransaction()
@@ -431,7 +454,8 @@ public class MainActivity extends AppCompatActivity
                 Log.d("g", "onFragmentInteraction: dick" + mCurrentLocation);
                 EditText editUsername = (EditText) findViewById(R.id.editUsername);
                 EditText editPassword = (EditText) findViewById(R.id.editPassword);
-
+                CheckBox remember = (CheckBox) findViewById(R.id.rememberCheck);
+                boolean doRemember = remember.isChecked();
                 String usernameString = editUsername.getText().toString();
                 String passwordString = editPassword.getText().toString();
 
@@ -450,6 +474,14 @@ public class MainActivity extends AppCompatActivity
                 } else {
                     Log.d("onFragmentInteraction", "Attempting Login");
                     Log.d("t", "onFragmentInteraction: ass" + mCurrentLocation);
+                    if(doRemember){ //Save the stuff
+                        SharedPreferences sharedSettings = getSharedPreferences(PREFS_NAME, 0);
+                        SharedPreferences.Editor editor = sharedSettings.edit();
+                        //put in new stuff
+                        editor.putString(GET_USERNAME, usernameString);
+                        editor.putString(GET_PASSWORD, passwordString);
+                        editor.commit();
+                    }
                     task = new LoginWebServiceTask();
                     task.execute(PARTIAL_LOGIN_URL, usernameString, passwordString);
                 }
@@ -725,6 +757,11 @@ public class MainActivity extends AppCompatActivity
                 //unsuccessful login
                 Toast.makeText(getApplicationContext(), "Login failed.", Toast.LENGTH_LONG)
                         .show();
+                SharedPreferences sharedSettings = getSharedPreferences(PREFS_NAME, 0);
+                SharedPreferences.Editor editor = sharedSettings.edit();
+                //clear any incorrect stuff
+                editor.remove(GET_USERNAME);
+                editor.remove(GET_PASSWORD);
             }
         }
     }

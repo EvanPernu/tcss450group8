@@ -24,7 +24,7 @@
     <string name="action_search">Search</string>
     <string name="hint_location">Location</string>
     <string name="hint_search">Search for Events</string>
-
+    <string name="remember_me">Remember Me</string>
 
 
     <string-array name="search_order_options_array">
