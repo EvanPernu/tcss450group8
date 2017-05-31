@@ -546,6 +546,7 @@ public class MainActivity extends AppCompatActivity
                 //clear the login details
                 editor.remove(GET_USERNAME);
                 editor.remove(GET_PASSWORD);
+                editor.commit();
 
                 getSupportFragmentManager().beginTransaction()
                         .add(R.id.fragmentContainer, new LoginOrRegisterFragment())
