@@ -22,7 +22,7 @@
     <string name="expand_search">More Options</string>
 
     <string name="action_search">Search</string>
-    <string name="hint_location">Location</string>
+    <string name="hint_location">City or Zip Code</string>
     <string name="hint_search">Search for Events</string>
     <string name="remember_me">Remember Me</string>
     <string name="logout">Logout</string>

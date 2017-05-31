@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <EditText
+        android:id="@+id/editTextEvent"
+        android:drawableRight="@android:drawable/ic_menu_search"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:ems="10"
+        android:paddingLeft="10dp"
+        android:paddingBottom="3dp"
+        android:inputType="textPersonName"
+        android:hint="Search for Events"
+         />
+
+    <EditText
+        android:id="@+id/editTextLocation"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:ems="10"
+        android:paddingLeft="10dp"
+        android:inputType="textPersonName"
+        android:hint="@string/hint_location" />
+
+    <TextView
+        android:id="@+id/txtSearchDistance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_gravity="center_horizontal"
+        android:text="dist"
+        />
+
+    <SeekBar
+        android:id="@+id/barSearchDistance"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_gravity="center_horizontal"
+        android:paddingRight="10dp"
+        android:max="99"
+        android:progress="10">
+
+    </SeekBar>
+
+    <Button
+        android:id="@+id/searchButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="@string/action_search"
+        style="@style/ButtonTheme1"
+        android:layout_marginTop="8dp"
+        />
+
+    <Button
+        android:id="@+id/btnSearchOptions"
+        style="@style/ButtonTheme2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:drawableRight="@android:drawable/ic_menu_more"
+        android:text="@string/expand_search"
+        android:layout_marginLeft="24dp"
+        android:layout_marginRight="24dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp" />
+
+
+    <Spinner
+        android:id="@+id/spinnerOrder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginRight="24dp"
+         />
+
+    <ListView
+        android:id="@+id/listCategories"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="0dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginRight="24dp"
+        android:layout_marginLeft="24dp" />
+
+
+</LinearLayout>
+

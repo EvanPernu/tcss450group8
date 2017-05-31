@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.location.Location;
 import android.os.Build;
 import android.provider.CalendarContract;
 import android.support.v7.app.AlertDialog;
@@ -31,6 +32,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import edu.uw.tcss450.group8.frolicker.MainActivity;
 import edu.uw.tcss450.group8.frolicker.R;
 
 /**
@@ -96,6 +98,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
 
 
         holder.eventName.setText(currentEventCard.getEventName());
+
         holder.eventDate.setText(currentEventCard.getEventStart());
         holder.eventAddress.setText(currentEventCard.getFullAddress());
 
@@ -206,6 +209,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
 
         Intent intent = new Intent(Intent.ACTION_INSERT)
                 .setData(CalendarContract.Events.CONTENT_URI)
+                .putExtra(CalendarContract.Events.CALENDAR_ACCESS_LEVEL, CalendarContract.Events.CAL_ACCESS_OWNER)
                 .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, beginTime.getTimeInMillis())
                 .putExtra(CalendarContract.EXTRA_EVENT_END_TIME, endTime.getTimeInMillis())
                 .putExtra(CalendarContract.Events.TITLE, currentEventCard.getEventName())
@@ -213,6 +217,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
                         currentEventCard.getEventStreetAddress())
                 .putExtra(CalendarContract.Events.AVAILABILITY,
                         CalendarContract.Events.AVAILABILITY_BUSY);
+
         context.startActivity(intent);
     }
 

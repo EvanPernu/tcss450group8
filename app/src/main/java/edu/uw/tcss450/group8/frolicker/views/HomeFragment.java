@@ -135,8 +135,7 @@ public class HomeFragment extends Fragment  implements View.OnClickListener {
                 break;
 
             case R.id.logout:
-                mainActivity = (MainActivity)getContext();
-                mainActivity.onFragmentInteraction(6);
+                returnToLoginOrRegister();
             default:
                 break;
 
@@ -144,6 +143,23 @@ public class HomeFragment extends Fragment  implements View.OnClickListener {
 
         return super.onOptionsItemSelected(item);
     }
+
+    private void returnToLoginOrRegister() {
+        final ProgressDialog progressDialog = new ProgressDialog(getContext());
+        progressDialog.setMessage("Logging out...");
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialog.show();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                progressDialog.dismiss();
+                MainActivity mainActivity = (MainActivity)getContext();
+                mainActivity.onFragmentInteraction(6);
+            }
+        }, 1500);
+    }
+
+
 
     private void loadMap() {
         final ProgressDialog progressDialog = new ProgressDialog(getContext());

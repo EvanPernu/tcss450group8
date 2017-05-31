@@ -6,9 +6,12 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 
 import edu.uw.tcss450.group8.frolicker.R;
+
+import static android.content.Context.INPUT_METHOD_SERVICE;
 
 
 /**
@@ -58,9 +61,17 @@ public class RegisterFragment extends Fragment implements View.OnClickListener {
         if (mListener != null) {
             switch (view.getId()) {
                 case R.id.toFour:
+                    hideSoftKeyBoard();
                     mListener.onFragmentInteraction(5);
                     break;
             }
+        }
+    }
+    private void hideSoftKeyBoard() {
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(INPUT_METHOD_SERVICE);
+
+        if(imm.isAcceptingText()) { // verify if the soft keyboard is open
+            imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
         }
     }
 

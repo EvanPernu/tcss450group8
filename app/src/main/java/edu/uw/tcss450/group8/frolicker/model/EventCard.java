@@ -20,6 +20,7 @@ public class EventCard {
     private String monthDay;
     private String eventPrice;
     private String eventVenue;
+    private String eventCategoryId;
 
     public EventCard() {
 
@@ -41,6 +42,10 @@ public class EventCard {
 
     public String getEventName() {
         return eventName;
+    }
+
+    public String getEventCategoryId() {
+        return eventCategoryId;
     }
 
     public String getEventStart() {
@@ -78,6 +83,10 @@ public class EventCard {
 
     public void setEventVenue(String eventVenue) {
         this.eventVenue = eventVenue;
+    }
+
+    public void setEventCategoryId(String eventCategoryId) {
+        this.eventCategoryId = eventCategoryId;
     }
 
     public void setEventImgURL(String eventImageUrl) {

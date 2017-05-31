@@ -546,11 +546,13 @@ public class MainActivity extends AppCompatActivity
                 //clear the login details
                 editor.remove(GET_USERNAME);
                 editor.remove(GET_PASSWORD);
-
+                editor.commit();
                 getSupportFragmentManager().beginTransaction()
                         .add(R.id.fragmentContainer, new LoginOrRegisterFragment())
                         .commit();
                 break;
+
+
         }
     }
 
@@ -591,6 +593,7 @@ public class MainActivity extends AppCompatActivity
             mUsername = strings[1];
 
             try {
+                Thread.sleep(3000);
                 URL urlObject = new URL(url + SERVICE);
                 urlConnection = (HttpURLConnection) urlObject.openConnection();
 
@@ -707,6 +710,7 @@ public class MainActivity extends AppCompatActivity
             mUsername = strings[1];
 
             try {
+                Thread.sleep(3000);
                 URL urlObject = new URL(url + SERVICE);
                 urlConnection = (HttpURLConnection) urlObject.openConnection();
 

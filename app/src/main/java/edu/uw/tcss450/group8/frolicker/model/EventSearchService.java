@@ -22,6 +22,8 @@ import java.util.List;
 
 import edu.uw.tcss450.group8.frolicker.MainActivity;
 
+import static android.content.ContentValues.TAG;
+
 
 /**
  * Created by Tim on 5/27/2017.
@@ -58,7 +60,6 @@ public class EventSearchService extends AsyncTask<String, String, String> {
             Log.d("EventSearchService", "URL =       "+url.toString());
             connection = (HttpURLConnection) url.openConnection();
             connection.connect();
-
             InputStream stream = connection.getInputStream();
             reader = new BufferedReader((new InputStreamReader(stream)));
             StringBuffer buffer = new StringBuffer();
@@ -97,6 +98,9 @@ public class EventSearchService extends AsyncTask<String, String, String> {
                 // parse date and time
                 eventCard.setEventStart(eventObject.getJSONObject("start").getString("local"));
                 eventCard.setEventEnd(eventObject.getJSONObject("end").getString("local"));
+
+                // parse category
+                eventCard.setEventCategoryId(eventObject.getString("category_id"));
 
                 // parse description
                 eventCard.setEventDescription(eventObject.getJSONObject("description")

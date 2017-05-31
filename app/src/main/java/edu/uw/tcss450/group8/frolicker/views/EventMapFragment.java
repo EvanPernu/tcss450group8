@@ -13,6 +13,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -31,6 +32,9 @@ public class EventMapFragment extends Fragment implements OnMapReadyCallback {
     MapView mMapView;
     View mView;
     List<EventCard> eventCardList;
+    private double lat;
+    private double lng;
+    private String name;
 
     public EventMapFragment() {
         // Required empty public constructor
@@ -63,13 +67,16 @@ public class EventMapFragment extends Fragment implements OnMapReadyCallback {
         MapsInitializer.initialize(getContext());
 
         mGoogleMap = googleMap;
-        googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+        mGoogleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         for(int i=0; i<eventCardList.size(); i++) {
-            double lat = Double.parseDouble(eventCardList.get(i).getEventLatitude());
-            double lng = Double.parseDouble(eventCardList.get(i).getEventLongitude());
-            String name = eventCardList.get(i).getEventName();
-            googleMap.addMarker(new MarkerOptions().position(new LatLng(lat,lng)).title(name)
-                    .snippet(eventCardList.get(i).getEventVenue()));
+            lat = Double.parseDouble(eventCardList.get(i).getEventLatitude());
+            lng = Double.parseDouble(eventCardList.get(i).getEventLongitude());
+            name = eventCardList.get(i).getEventName();
+            addMapIcon(eventCardList.get(i).getEventCategoryId(), i);
+//            mGoogleMap.addMarker(new MarkerOptions().position(new LatLng(lat,lng)).title(name)
+//                    .snippet(eventCardList.get(i).getEventVenue())
+//                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.music)));
+
         }
 
         // using the first event in the list for camera positioning
@@ -84,5 +91,75 @@ public class EventMapFragment extends Fragment implements OnMapReadyCallback {
 
     public void setEventCardList(List<EventCard> eventCardList) {
         this.eventCardList = eventCardList;
+
+    }
+
+    public void addMapIcon(String id, int index) {
+
+        switch (id) {
+
+            case "103":
+                mGoogleMap.addMarker(new MarkerOptions().position(new LatLng(lat,lng)).title(name)
+                        .snippet(eventCardList.get(index).getEventVenue())
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.music)));
+                break;
+
+            case "110":
+                mGoogleMap.addMarker(new MarkerOptions().position(new LatLng(lat,lng)).title(name)
+                        .snippet(eventCardList.get(index).getEventVenue())
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.food)));
+                break;
+
+            case "102":
+                mGoogleMap.addMarker(new MarkerOptions().position(new LatLng(lat,lng)).title(name)
+                        .snippet(eventCardList.get(index).getEventVenue())
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.tech)));
+                break;
+
+            case "111":
+                mGoogleMap.addMarker(new MarkerOptions().position(new LatLng(lat,lng)).title(name)
+                        .snippet(eventCardList.get(index).getEventVenue())
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.charity)));
+                break;
+
+            case "106":
+                mGoogleMap.addMarker(new MarkerOptions().position(new LatLng(lat,lng)).title(name)
+                        .snippet(eventCardList.get(index).getEventVenue())
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.fashion)));
+                break;
+
+            case "108":
+                mGoogleMap.addMarker(new MarkerOptions().position(new LatLng(lat,lng)).title(name)
+                        .snippet(eventCardList.get(index).getEventVenue())
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.sports)));
+                break;
+
+            case "104":
+                mGoogleMap.addMarker(new MarkerOptions().position(new LatLng(lat,lng)).title(name)
+                        .snippet(eventCardList.get(index).getEventVenue())
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.game)));
+                break;
+
+            case "105":
+                mGoogleMap.addMarker(new MarkerOptions().position(new LatLng(lat,lng)).title(name)
+                        .snippet(eventCardList.get(index).getEventVenue())
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.artss)));
+                break;
+
+            default:
+                mGoogleMap.addMarker(new MarkerOptions().position(new LatLng(lat,lng)).title(name)
+                        .snippet(eventCardList.get(index).getEventVenue()));
+                        //.icon(BitmapDescriptorFactory.fromResource(R.drawable.travel)));
+                break;
+
+
+
+
+
+
+        }
+
+
+
     }
 }

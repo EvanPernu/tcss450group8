@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -28,6 +29,8 @@ import java.util.Set;
 import edu.uw.tcss450.group8.frolicker.MainActivity;
 import edu.uw.tcss450.group8.frolicker.R;
 import edu.uw.tcss450.group8.frolicker.model.EventSearchService;
+
+import static android.content.Context.INPUT_METHOD_SERVICE;
 
 
 /**
@@ -137,7 +140,7 @@ public class EventSearchFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_event_search, container, false);
+        View view = inflater.inflate(R.layout.frag_test, container, false);
         //create references to UI elementstainer, false)
         etEventSearch = (EditText) view.findViewById(R.id.editTextEvent);
         etLocationSearch = (EditText) view.findViewById(R.id.editTextLocation);
@@ -157,7 +160,7 @@ public class EventSearchFragment extends Fragment {
 
 
         //hide expanded options
-        etLocationSearch.setVisibility(View.GONE);
+        //etLocationSearch.setVisibility(View.GONE);
         orderSpinner.setVisibility(View.GONE);
         categoriesList.setVisibility(View.GONE);
 
@@ -184,6 +187,7 @@ public class EventSearchFragment extends Fragment {
         searchButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
+                hideSoftKeyBoard();
                 searchInit();
             }
         });
@@ -191,21 +195,29 @@ public class EventSearchFragment extends Fragment {
         expandButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                if(etLocationSearch.getVisibility() == View.GONE){
-                    //if the expanded options are hidden, show them
-                    etLocationSearch.setVisibility(View.VISIBLE);
-                    orderSpinner.setVisibility(View.VISIBLE);
-                    categoriesList.setVisibility(View.VISIBLE);
-
-                    //TODO change drawable toe xpand/collapse
-                    //expandButton.setCompoundDrawablesWithIntrinsicBounds( R.drawable., 0, 0, 0);
-
-                }else{
-                    //if the expanded options are shown, collapse them
-                    etLocationSearch.setVisibility(View.GONE);
+                if(orderSpinner.getVisibility() == View.VISIBLE) {
                     orderSpinner.setVisibility(View.GONE);
                     categoriesList.setVisibility(View.GONE);
+                }else{
+                    orderSpinner.setVisibility(View.VISIBLE);
+                    categoriesList.setVisibility(View.VISIBLE);
                 }
+
+//                if(etLocationSearch.getVisibility() == View.GONE){
+//                    //if the expanded options are hidden, show them
+//                    //etLocationSearch.setVisibility(View.VISIBLE);
+//                    orderSpinner.setVisibility(View.VISIBLE);
+//                    categoriesList.setVisibility(View.VISIBLE);
+//
+//                    //TODO change drawable toe xpand/collapse
+//                    //expandButton.setCompoundDrawablesWithIntrinsicBounds( R.drawable., 0, 0, 0);
+//
+//                }else{
+//                    //if the expanded options are shown, collapse them
+//                    //etLocationSearch.setVisibility(View.GONE);
+//                    orderSpinner.setVisibility(View.GONE);
+//                    categoriesList.setVisibility(View.GONE);
+//                }
             }
         });
 
@@ -356,6 +368,13 @@ public class EventSearchFragment extends Fragment {
             return 3;
         }
         */
+    }
+    private void hideSoftKeyBoard() {
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(INPUT_METHOD_SERVICE);
+
+        if(imm.isAcceptingText()) { // verify if the soft keyboard is open
+            imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
+        }
     }
 
     /**
