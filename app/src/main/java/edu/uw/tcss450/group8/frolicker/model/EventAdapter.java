@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.location.Location;
 import android.os.Build;
 import android.provider.CalendarContract;
 import android.support.v7.app.AlertDialog;
@@ -32,14 +31,14 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import edu.uw.tcss450.group8.frolicker.MainActivity;
 import edu.uw.tcss450.group8.frolicker.R;
 
-/**
- * Created by Tim on 5/25/2017.
- */
 
+/**
+ * The type Event adapter.
+ */
 public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHolder> {
+
 
     private List<EventCard> eventCardList;
     private LayoutInflater inflater;
@@ -49,6 +48,13 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
     private EventCard currentEventCard;
 
 
+    /**
+     * Instantiates a new Event adapter.
+     *
+     * @param context       the context
+     * @param eventCardList the event card list
+     * @param recyclerView  the recycler view
+     */
     public EventAdapter(Context context, List<EventCard> eventCardList, RecyclerView recyclerView) {
         inflater = LayoutInflater.from(context);
         this.eventCardList = eventCardList;
@@ -56,17 +62,28 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
         this.recyclerView = recyclerView;
     }
 
+
+    /**
+     * The type Event view holder.
+     */
     class EventViewHolder extends RecyclerView.ViewHolder {
 
-        TextView eventName;
-        TextView eventDate;
-        TextView eventAddress;
-        ImageView moreInfoButton;
-        WebView eventDescription;
-        ImageView eventImage;
-        ProgressBar progressBar;
-        LinearLayout llExpandArea;
 
+        private TextView eventName;
+        private TextView eventDate;
+        private TextView eventAddress;
+        private ImageView moreInfoButton;
+        private WebView eventDescription;
+        private ImageView eventImage;
+        private ProgressBar progressBar;
+        private LinearLayout llExpandArea;
+
+
+        /**
+         * Instantiates a new Event view holder.
+         *
+         * @param itemView the item view
+         */
         public EventViewHolder(View itemView) {
             super(itemView);
 
@@ -81,16 +98,26 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
         }
     }
 
+    /**
+     *
+     * @param parent
+     * @param viewType
+     * @return
+     */
     @Override
     public EventViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        //View view;
 
         View view = inflater.inflate(R.layout.fragment_event_card, parent, false);
         EventViewHolder holder = new EventViewHolder(view);
-        return holder;
 
+        return holder;
     }
 
+    /**
+     *
+     * @param holder
+     * @param position
+     */
     @Override
     public void onBindViewHolder(final EventViewHolder holder, int position) {
 
@@ -98,12 +125,8 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
 
 
         holder.eventName.setText(currentEventCard.getEventName());
-
         holder.eventDate.setText(currentEventCard.getEventStart());
         holder.eventAddress.setText(currentEventCard.getFullAddress());
-
-//        Typeface myCustomFont = Typeface.createFromAsset(context.getAssets(), "fonts/grotesk.otf");
-//        holder.eventName.setTypeface(myCustomFont);
 
         setupImageLoader();
         runImageLoader(holder, currentEventCard.getEventImgURL());
@@ -111,6 +134,10 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
         setupCardExpander(holder);
     }
 
+    /**
+     *
+     * @param holder
+     */
     private void setupCardExpander(final EventViewHolder holder) {
 
         final boolean isExpanded = holder.getAdapterPosition() == mExpandedPosition;
@@ -131,6 +158,11 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
 
     }
 
+    /**
+     *
+     * @param holder
+     * @param imageUrl
+     */
     private void runImageLoader(final EventViewHolder holder, String imageUrl) {
 
         ImageLoader imageLoader = ImageLoader.getInstance();
@@ -143,7 +175,6 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
                 .showImageForEmptyUri(defaultImage)
                 .showImageOnFail(defaultImage)
                 .imageScaleType(ImageScaleType.EXACTLY).build();
-        //.showImageOnLoading(defaultImage).build();
 
         //download and display image from url, add setup progress bar
         imageLoader.displayImage(imageUrl, holder.eventImage, options,
@@ -166,6 +197,10 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
         });
     }
 
+    /**
+     *
+     * @param holder
+     */
     private void setupCalendarLoader(final EventViewHolder holder) {
 
         // press and hold image to add event to calender
@@ -189,6 +224,9 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
 
     }
 
+    /**
+     *
+     */
     private void launchCalendar() {
 
         String eventStart = currentEventCard.getUnformattedEventStart();
@@ -241,7 +279,10 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
         // END - UNIVERSAL IMAGE LOADER SETUP
     }
 
-
+    /**
+     *
+     * @return
+     */
     @Override
     public int getItemCount() {
         if(eventCardList != null) {
@@ -252,6 +293,11 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
         }
     }
 
+    /**
+     *
+     * @param position
+     * @return
+     */
     @Override
     public long getItemId(int position) {
         return position;

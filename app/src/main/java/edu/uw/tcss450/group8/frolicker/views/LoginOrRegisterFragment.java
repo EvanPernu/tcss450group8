@@ -23,6 +23,9 @@ public class LoginOrRegisterFragment extends Fragment implements View.OnClickLis
     private OnFragmentInteractionListener mListener;
 
 
+    /**
+     * Instantiates a new Login or register fragment.
+     */
     public LoginOrRegisterFragment() {
         // Required empty public constructor
     }
@@ -83,6 +86,11 @@ public class LoginOrRegisterFragment extends Fragment implements View.OnClickLis
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
+        /**
+         * On fragment interaction.
+         *
+         * @param theFrag the the frag
+         */
         void onFragmentInteraction(int theFrag);
     }
 }

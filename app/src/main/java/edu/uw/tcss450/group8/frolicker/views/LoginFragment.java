@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 
-import edu.uw.tcss450.group8.frolicker.MainActivity;
 import edu.uw.tcss450.group8.frolicker.R;
 
 import static android.content.Context.INPUT_METHOD_SERVICE;
@@ -25,6 +24,9 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 
     private OnFragmentInteractionListener mListener;
 
+    /**
+     * Instantiates a new Login fragment.
+     */
     public LoginFragment() {
         // Required empty public constructor
     }
@@ -88,6 +90,11 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
+        /**
+         * On fragment interaction.
+         *
+         * @param theFrag the the frag
+         */
         void onFragmentInteraction(int theFrag);
     }
 }

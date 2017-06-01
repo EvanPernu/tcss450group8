@@ -2,7 +2,6 @@ package edu.uw.tcss450.group8.frolicker.views;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -15,7 +14,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.List;
 
@@ -32,22 +30,26 @@ import edu.uw.tcss450.group8.frolicker.model.EventCard;
  *
  * @author Evan Pernu
  */
-public class HomeFragment extends Fragment  implements View.OnClickListener {
+public class HomeFragment extends Fragment {
 
     private List<EventCard> eventCardList;
     private TextView mActiveUser;
     private OnFragmentInteractionListener mListener;
     private String mUsername;
 
+    /**
+     * Instantiates a new Home fragment.
+     */
     public HomeFragment() {
         // Required empty public constructor
     }
 
 
     /**
+     * New instance home fragment.
      *
      * @param name the active user's username
-     * @return
+     * @return home fragment
      */
     public static HomeFragment newInstance(String name) {
         HomeFragment fragment = new HomeFragment();
@@ -73,10 +75,6 @@ public class HomeFragment extends Fragment  implements View.OnClickListener {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_home, container, false);
 
-        //set onclick listeners
-//        Button b = (Button) rootView.findViewById(R.id.btnSearchAnyEvents);
-//        b.setOnClickListener(this);
-
         //create a reference to user display
         mActiveUser = (TextView) rootView.findViewById(R.id.activeUser);
         mActiveUser.setText("Welcome, "+mUsername+"!");
@@ -98,6 +96,11 @@ public class HomeFragment extends Fragment  implements View.OnClickListener {
     }
 
 
+    /**
+     * Sets event card list.
+     *
+     * @param eventCardList the event card list
+     */
     public void setEventCardList(List<EventCard> eventCardList) {
         this.eventCardList = eventCardList;
     }
@@ -159,8 +162,6 @@ public class HomeFragment extends Fragment  implements View.OnClickListener {
         }, 1500);
     }
 
-
-
     private void loadMap() {
         final ProgressDialog progressDialog = new ProgressDialog(getContext());
         progressDialog.setMessage("Loading Map...");
@@ -176,46 +177,6 @@ public class HomeFragment extends Fragment  implements View.OnClickListener {
         }, 1000);
     }
 
-    @Override
-    public void onClick(final View view)
-    {
-//        final ProgressDialog progressDialog = new ProgressDialog(getContext());
-//        //progressDialog.setMessage("Loading...");
-//
-//        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-//        progressDialog.show();
-//        new Handler().postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                progressDialog.dismiss();
-//                if(mListener != null) {
-//                    switch (view.getId()) {
-//                        case R.id.btnSearchAnyEvents:
-//                            MainActivity mainActivity = (MainActivity)getContext();
-//                            mainActivity.loadNextEventFragment(eventCardList,3);
-//                            //mainActivity.loadHomeFragment(eventCardList);
-//                            //mListener.onHomeFragmentInteraction(1);
-//                            break;
-//                    }
-//                }
-//
-//
-//            }
-//        }, 1000);
-
-//        if (mListener != null) {
-//            switch (view.getId()) {
-//                case R.id.btnSearchAnyEvents:
-//                    MainActivity mainActivity = (MainActivity)getContext();
-//                    //mainActivity.loadEventMapFragment(eventCardList);
-//                    mainActivity.loadHomeFragment(eventCardList);
-//                    //mListener.onHomeFragmentInteraction(1);
-//                    break;
-//            }
-        }
- //   }
-
-
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -227,7 +188,12 @@ public class HomeFragment extends Fragment  implements View.OnClickListener {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
+        /**
+         * On home fragment interaction.
+         *
+         * @param n the n
+         */
+// TODO: Update argument type and name
         void onHomeFragmentInteraction(int n);
     }
 

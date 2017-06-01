@@ -1,6 +1,5 @@
 package edu.uw.tcss450.group8.frolicker.views;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -11,10 +10,8 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.CheckedTextView;
 import android.widget.EditText;
-import android.widget.ExpandableListView;
 import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.Spinner;
@@ -22,9 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
+
 
 import edu.uw.tcss450.group8.frolicker.MainActivity;
 import edu.uw.tcss450.group8.frolicker.R;
@@ -35,11 +30,11 @@ import static android.content.Context.INPUT_METHOD_SERVICE;
 
 /**
  * This fragment allows users to search for events with the following parameters:
- *
+ * <p>
  * Keyword
  * Distance
  *
- * @author  Tim Weaver
+ * @author Tim Weaver
  * @author Evan Pernu
  */
 public class EventSearchFragment extends Fragment {
@@ -119,6 +114,9 @@ public class EventSearchFragment extends Fragment {
      */
     private ArrayList<String> mCategories;
 
+    /**
+     * Instantiates a new Event search fragment.
+     */
     public EventSearchFragment() {
         // Required empty public constructor
     }
@@ -141,7 +139,7 @@ public class EventSearchFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.frag_test, container, false);
-        //create references to UI elementstainer, false)
+
         etEventSearch = (EditText) view.findViewById(R.id.editTextEvent);
         etLocationSearch = (EditText) view.findViewById(R.id.editTextLocation);
         searchButton = (Button) view.findViewById(R.id.searchButton);
@@ -160,29 +158,28 @@ public class EventSearchFragment extends Fragment {
 
 
         //hide expanded options
-        //etLocationSearch.setVisibility(View.GONE);
         orderSpinner.setVisibility(View.GONE);
         categoriesList.setVisibility(View.GONE);
 
         //set listeners
         distanceBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                                 int distance;
-                                                   @Override
-                                                   public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                                                       distance = progress + MIN_SEARCH_DISTANCE;
-                                                        distanceTxt.setText("Within "+distance+" miles");
-                                                   }
+           @Override
+           public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+               distance = progress + MIN_SEARCH_DISTANCE;
+                distanceTxt.setText("Within "+distance+" miles");
+           }
 
-                                                   @Override
-                                                   public void onStartTrackingTouch(SeekBar seekBar) {
+           @Override
+           public void onStartTrackingTouch(SeekBar seekBar) {
 
-                                                   }
+           }
 
-                                                   @Override
-                                                   public void onStopTrackingTouch(SeekBar seekBar) {
-                                                        mDistance = distance;
-                                                   }
-                                               });
+           @Override
+           public void onStopTrackingTouch(SeekBar seekBar) {
+                mDistance = distance;
+           }
+       });
 
         searchButton.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -203,21 +200,6 @@ public class EventSearchFragment extends Fragment {
                     categoriesList.setVisibility(View.VISIBLE);
                 }
 
-//                if(etLocationSearch.getVisibility() == View.GONE){
-//                    //if the expanded options are hidden, show them
-//                    //etLocationSearch.setVisibility(View.VISIBLE);
-//                    orderSpinner.setVisibility(View.VISIBLE);
-//                    categoriesList.setVisibility(View.VISIBLE);
-//
-//                    //TODO change drawable toe xpand/collapse
-//                    //expandButton.setCompoundDrawablesWithIntrinsicBounds( R.drawable., 0, 0, 0);
-//
-//                }else{
-//                    //if the expanded options are shown, collapse them
-//                    //etLocationSearch.setVisibility(View.GONE);
-//                    orderSpinner.setVisibility(View.GONE);
-//                    categoriesList.setVisibility(View.GONE);
-//                }
             }
         });
 
@@ -316,59 +298,14 @@ public class EventSearchFragment extends Fragment {
             URL.append(location);
         }
 
-        Log.d("ESF about to search", "URL =     "+URL.toString());
         new EventSearchService(getContext(),dialogMessage).execute(URL.toString());
 
-        /*
-         etEventSearch = (EditText) view.findViewById(R.id.editTextEvent);
-        etLocationSearch = (EditText) view.findViewById(R.id.editTextLocation);
-        searchButton = (Button) view.findViewById(R.id.searchButton);
-        distanceBar = (SeekBar) view.findViewById(R.id.barSearchDistance);
-        distanceTxt = (TextView) view.findViewById(R.id.txtSearchDistance);
-        orderSpinner = (Spinner) view.findViewById(R.id.spinnerOrder);
-        categoriesList = (ListView) view.findViewById(R.id.listCategories);
-        expandButton = (Button) view.findViewById(R.id.btnSearchOptions);
-
-
-        switch(validateInput(event, location)) {
-            case 0 :
-                Toast.makeText(getContext(), "Enter event or location", Toast.LENGTH_LONG).show();
-                break;
-            case 1:
-                new EventSearchService(getContext(),dialogMessage).execute(EVENTBRITE_URL + "?location.address="
-                        + location + "&token=" + EVENTBRITE_KEY + "&expand=venue"
-                        +mCurrentLocation+translateOrder(mOrder)+"&location.within="+mDistance+"mi");
-                break;
-            case 2:
-                new EventSearchService(getContext(),dialogMessage).execute(EVENTBRITE_URL + "?q="
-                        + event + "&token=" + EVENTBRITE_KEY + "&expand=venue"
-                        +mCurrentLocation+translateOrder(mOrder)+"&location.within="+mDistance+"mi");
-                break;
-            case 3:
-                new EventSearchService(getContext(),dialogMessage).execute(EVENTBRITE_URL + "?q="
-                        + event + "&location.address=" + location + "&token="
-                        + EVENTBRITE_KEY + "&expand=venue"
-                        +translateOrder(mOrder)+"&location.within="+mDistance+"mi");
-                break;
-            default:
-                break;
-        }
 
     }
 
-    private int validateInput(String event, String location) {
-
-        if(event.equals("") && location.equals("")) {
-            return 0;
-        }else if(event.equals("") && !location.equals("")) {
-            return 1;
-        } else if(!event.equals("") && location.equals("")) {
-            return 2;
-        } else {
-            return 3;
-        }
-        */
-    }
+    /**
+     *
+     */
     private void hideSoftKeyBoard() {
         InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(INPUT_METHOD_SERVICE);
 

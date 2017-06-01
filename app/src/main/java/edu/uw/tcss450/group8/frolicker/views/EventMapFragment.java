@@ -23,19 +23,23 @@ import java.util.List;
 import edu.uw.tcss450.group8.frolicker.R;
 import edu.uw.tcss450.group8.frolicker.model.EventCard;
 
+
 /**
- * A simple {@link Fragment} subclass.
+ * The type Event map fragment.
  */
 public class EventMapFragment extends Fragment implements OnMapReadyCallback {
 
-    GoogleMap mGoogleMap;
-    MapView mMapView;
-    View mView;
-    List<EventCard> eventCardList;
+    private GoogleMap mGoogleMap;
+    private MapView mMapView;
+    private View mView;
+    private List<EventCard> eventCardList;
     private double lat;
     private double lng;
     private String name;
 
+    /**
+     * Instantiates a new Event map fragment.
+     */
     public EventMapFragment() {
         // Required empty public constructor
     }
@@ -73,10 +77,6 @@ public class EventMapFragment extends Fragment implements OnMapReadyCallback {
             lng = Double.parseDouble(eventCardList.get(i).getEventLongitude());
             name = eventCardList.get(i).getEventName();
             addMapIcon(eventCardList.get(i).getEventCategoryId(), i);
-//            mGoogleMap.addMarker(new MarkerOptions().position(new LatLng(lat,lng)).title(name)
-//                    .snippet(eventCardList.get(i).getEventVenue())
-//                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.music)));
-
         }
 
         // using the first event in the list for camera positioning
@@ -89,12 +89,23 @@ public class EventMapFragment extends Fragment implements OnMapReadyCallback {
 
     }
 
+    /**
+     * Sets event card list.
+     *
+     * @param eventCardList the event card list
+     */
     public void setEventCardList(List<EventCard> eventCardList) {
         this.eventCardList = eventCardList;
 
     }
 
-    public void addMapIcon(String id, int index) {
+    /**
+     * Add map icon.
+     *
+     * @param id    the id
+     * @param index the index
+     */
+    private void addMapIcon(String id, int index) {
 
         switch (id) {
 
@@ -149,17 +160,7 @@ public class EventMapFragment extends Fragment implements OnMapReadyCallback {
             default:
                 mGoogleMap.addMarker(new MarkerOptions().position(new LatLng(lat,lng)).title(name)
                         .snippet(eventCardList.get(index).getEventVenue()));
-                        //.icon(BitmapDescriptorFactory.fromResource(R.drawable.travel)));
                 break;
-
-
-
-
-
-
         }
-
-
-
     }
 }

@@ -22,6 +22,9 @@ import static android.content.Context.INPUT_METHOD_SERVICE;
 public class RegisterFragment extends Fragment implements View.OnClickListener {
     private OnFragmentInteractionListener mListener;
 
+    /**
+     * Instantiates a new Register fragment.
+     */
     public RegisterFragment() {
         // Required empty public constructor
     }
@@ -86,6 +89,11 @@ public class RegisterFragment extends Fragment implements View.OnClickListener {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
+        /**
+         * On fragment interaction.
+         *
+         * @param theFrag the the frag
+         */
         void onFragmentInteraction(int theFrag);
     }
 

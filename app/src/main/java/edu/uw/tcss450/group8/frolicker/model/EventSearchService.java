@@ -22,8 +22,6 @@ import java.util.List;
 
 import edu.uw.tcss450.group8.frolicker.MainActivity;
 
-import static android.content.ContentValues.TAG;
-
 
 /**
  * Created by Tim on 5/27/2017.
@@ -36,6 +34,12 @@ public class EventSearchService extends AsyncTask<String, String, String> {
     private Context context;
 
 
+    /**
+     * Instantiates a new Event search service.
+     *
+     * @param context       the context
+     * @param dialogMessage the dialog message
+     */
     public EventSearchService(Context context, String dialogMessage) {
         this.context = context;
         this.dialogMessage = dialogMessage;
@@ -50,6 +54,7 @@ public class EventSearchService extends AsyncTask<String, String, String> {
         pDialog.setCancelable(true);
         pDialog.show();
     }
+
 
     @Override
     protected String doInBackground(String... params) {

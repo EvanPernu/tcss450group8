@@ -1,7 +1,6 @@
 package edu.uw.tcss450.group8.frolicker;
 
 import android.Manifest;
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -16,9 +15,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.SearchView;
 import android.util.Log;
-import android.view.MenuItem;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -51,7 +48,6 @@ import edu.uw.tcss450.group8.frolicker.views.LoginOrRegisterFragment;
 import edu.uw.tcss450.group8.frolicker.views.PrefsInitFragment;
 import edu.uw.tcss450.group8.frolicker.views.RegisterFragment;
 
-import static android.R.attr.dialogMessage;
 
 /**
  * The main activity that controls internal data, fragment display, click listeners, and AsyncTasks
@@ -75,9 +71,7 @@ public class MainActivity extends AppCompatActivity
     // EvenBrite url
     private static final String EVENTBRITE_URL = "https://www.eventbriteapi.com/v3/events/search/";
 
-    /**
-     * EventBrite API key
-     */
+    // EventBrite API key
     private static final String EVENTBRITE_KEY = "3E3LN6F6HUADRFXTS74Y";
 
     //The URL of the database
@@ -117,7 +111,6 @@ public class MainActivity extends AppCompatActivity
     //I know it's dumb to save values like that, but we're already doing plaintext passwords,
     // this isn't exactly secure.
 
-    //private LocationServices mLocation;
     public static final long UPDATE_INTERVAL_IN_MILLISECONDS = 10000;
     public static final long FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS = UPDATE_INTERVAL_IN_MILLISECONDS / 2;
     private static final int MY_PERMISSIONS_LOCATIONS = 814;
@@ -159,7 +152,6 @@ public class MainActivity extends AppCompatActivity
                         .commit();
             }
         }
-
     }
 
     protected void startLocationUpdates() {

@@ -29,7 +29,7 @@ import edu.uw.tcss450.group8.frolicker.model.PrefsInitAdapter;
  * once upon a user's initial registration.
  *
  * @author Evan Pernu
- * @version 5/2/2017
+ * @version 5 /2/2017
  */
 public class PrefsInitFragment extends Fragment {
 
@@ -37,21 +37,15 @@ public class PrefsInitFragment extends Fragment {
     private PrefsInitAdapter mPrefsInitAdapter;
     private RecyclerView mPrefsInitRecyclerView;
 
-//    /** The list of event categories the user will be asked about. These come from
-//     * EventBrite and are hard coded to reduce wait times.
-//     */
-//
-//    private final String[] DEFAULT_PREFS = {"Comedy", "Sports", "Music", "Fair",
-//            "Culture", "Charity", "Historical", "Theatre", "Dance", "Outdoors"};
-
-
     /**
      * The list of event categories the user will be asked about. These come from
      * EventBrite and are hard coded to reduce wait times.
      */
     private Set<String> mCategories;
 
-    /**Default constructor*/
+    /**
+     * Default constructor
+     */
     public PrefsInitFragment() {
         // Required empty public constructor
     }
@@ -77,8 +71,6 @@ public class PrefsInitFragment extends Fragment {
         mPrefsInitRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mPrefsInitAdapter.notifyDataSetChanged();
 
-        //mListener.onPrefsInitFragmentInteraction("upload", null);
-
         return v;
     }
 
@@ -102,18 +94,19 @@ public class PrefsInitFragment extends Fragment {
     /**
      * This method is called when the user has provided their opinion on every category.
      * The MainActivity will be prompted to upload the user's preferences to the database.
-     * @param theMap
+     *
+     * @param theMap the the map
+     * @throws JsonProcessingException the json processing exception
      */
     public void notifyDone(Map<Integer, Integer> theMap) throws JsonProcessingException {
         //PrefList thePrefs = new PrefList(theMap);
         ObjectMapper mapper = new ObjectMapper();
 
-        //JSONObject theJSO = new JSONObject();
         mListener.onPrefsInitFragmentInteraction("upload", mapper.writeValueAsString(theMap));
         Log.d("notifyDone", "Notified Main to upload the following String to database: \n"+mapper.writeValueAsString(theMap));
     }
 
-     /**
+    /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
      * to the activity and potentially other fragments contained in that
@@ -124,6 +117,12 @@ public class PrefsInitFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
+        /**
+         * On prefs init fragment interaction.
+         *
+         * @param s           the s
+         * @param theJSString the the js string
+         */
         void onPrefsInitFragmentInteraction(String s, String theJSString);
     }
 
