@@ -67,57 +67,27 @@ public class MainActivity extends AppCompatActivity
         GoogleApiClient.OnConnectionFailedListener,
         LocationListener {
 
-
-    // EvenBrite url
     private static final String EVENTBRITE_URL = "https://www.eventbriteapi.com/v3/events/search/";
-
-    // EventBrite API key
     private static final String EVENTBRITE_KEY = "3E3LN6F6HUADRFXTS74Y";
-
-    //The URL of the database
     private final String DB_URL = "http://cssgate.insttech.washington.edu/~_450agrp8/";
-
-    //Tracks the username of the active user
     private String ACTIVE_USER;
 
-    //The URL of login
     private static final String PARTIAL_LOGIN_URL = "http://cssgate.insttech.washington.edu/"
             + "~_450agrp8/feedback";
 
-    //The user's home fragment
-    private HomeFragment mHomeFragment;
-
-    // google api
     private GoogleApiClient mGoogleApiClient;
-
-    /**
-     * The default search distance for events, in miles
-     */
     private static final String DEFUALT_SEARCH_RADIUS = "10mi";
-
-
     private static final String PREFS_NAME = "REMEMBERED_USER";
-    /**
-     *
-     * Getting the username from shared preferences
-     */
     private static String GET_USERNAME = "SAVED_USER";
-
-    /**
-     * Getting the password from shared preferences
-     */
     private static String GET_PASSWORD = "SAVED_PASSWORD";
-
-    //I know it's dumb to save values like that, but we're already doing plaintext passwords,
-    // this isn't exactly secure.
 
     public static final long UPDATE_INTERVAL_IN_MILLISECONDS = 10000;
     public static final long FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS = UPDATE_INTERVAL_IN_MILLISECONDS / 2;
     private static final int MY_PERMISSIONS_LOCATIONS = 814;
-
     private LocationRequest mLocationRequest;
     private Location mCurrentLocation;
     private Context context = this;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -193,7 +163,9 @@ public class MainActivity extends AppCompatActivity
                     }
                 } else {
                     // permission denied
-                    Toast.makeText(this, "Locations need to be working for this portion, please provide permission", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this,
+                            "Locations need to be working for this portion, please provide permission",
+                            Toast.LENGTH_SHORT).show();
                 }
             }
         }
@@ -205,7 +177,6 @@ public class MainActivity extends AppCompatActivity
         if (mGoogleApiClient != null) {
             mGoogleApiClient.connect();
         }
-
     }
 
     @Override
@@ -214,7 +185,6 @@ public class MainActivity extends AppCompatActivity
         if (mGoogleApiClient != null) {
             mGoogleApiClient.disconnect();
         }
-
     }
 
     @Override
@@ -274,7 +244,6 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-
     @Override
     public void onHomeFragmentInteraction(int n) {
         switch (n) {
@@ -290,9 +259,7 @@ public class MainActivity extends AppCompatActivity
                         .addToBackStack(null);
                 secondTransaction.commit();
                 break;
-
         }
-
     }
 
     /**
@@ -343,7 +310,6 @@ public class MainActivity extends AppCompatActivity
             return response;
         }
 
-
         @Override
         protected void onPostExecute(String result) {
             // Something wrong with the network or the URL.
@@ -355,9 +321,12 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-
     /**
-     * called when user clicks search button
+     * Loads a new fragment based on user actions.
+     *
+     * 0: Event search
+     * 1: Home fragment
+     * 2: Map fragment
      *
      * @param eventCardList a list of each event in card form
      * @author Tim Weaver
@@ -401,7 +370,6 @@ public class MainActivity extends AppCompatActivity
                 break;
         }
     }
-
 
     /**
      * Does different things based on the fragment we want to go to.
@@ -671,7 +639,6 @@ public class MainActivity extends AppCompatActivity
 
         public LoginWebServiceTask() {
 
-
         }
 
         @Override
@@ -686,7 +653,6 @@ public class MainActivity extends AppCompatActivity
 
         @Override
         protected String doInBackground(String... strings) {
-
 
             if (strings.length != 3) {
                 throw new IllegalArgumentException("Three String arguments required.");
@@ -772,7 +738,6 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-
     /**
      * Builds a map of every category as well as its EventBrite ID.
      * These values are hard coded to eliminate the need for another api call.
@@ -829,5 +794,4 @@ public class MainActivity extends AppCompatActivity
         return "&location.latitude=" + String.valueOf(mCurrentLocation.getLatitude()) +
                 "&location.longitude=" + String.valueOf(mCurrentLocation.getLongitude());
     }
-
 }
