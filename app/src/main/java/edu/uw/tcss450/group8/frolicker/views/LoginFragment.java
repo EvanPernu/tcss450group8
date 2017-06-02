@@ -71,6 +71,10 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
             }
         }
     }
+
+    /**
+     *  Hides the keyboard from view.
+     */
     private void hideSoftKeyBoard() {
         InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(INPUT_METHOD_SERVICE);
 

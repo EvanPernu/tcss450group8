@@ -3,7 +3,9 @@ package edu.uw.tcss450.group8.frolicker.model;
 import java.util.Date;
 
 /**
- * Created by Tim on 5/25/2017.
+ * The EventCard class holds all the data for an event
+ *
+ * @author Tim Weaver
  */
 public class EventCard {
 
@@ -248,6 +250,7 @@ public class EventCard {
     }
 
     /**
+     * Helper for formatting the date.
      *
      * @param eventStart
      * @return

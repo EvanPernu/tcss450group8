@@ -3,7 +3,6 @@ package edu.uw.tcss450.group8.frolicker.model;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -24,7 +23,9 @@ import edu.uw.tcss450.group8.frolicker.MainActivity;
 
 
 /**
- * Created by Tim on 5/27/2017.
+ * The EventSearchService class is an AsyncTask for searching for events.
+ *
+ * @author Tim Weaver
  */
 public class EventSearchService extends AsyncTask<String, String, String> {
 
@@ -45,6 +46,9 @@ public class EventSearchService extends AsyncTask<String, String, String> {
         this.dialogMessage = dialogMessage;
     }
 
+    /**
+     * Initializes a progress dialog.
+     */
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
@@ -55,14 +59,18 @@ public class EventSearchService extends AsyncTask<String, String, String> {
         pDialog.show();
     }
 
-
+    /**
+     * Retrieves and parses event data from EventBrite API
+     *
+     * @param params
+     * @return
+     */
     @Override
     protected String doInBackground(String... params) {
         HttpURLConnection connection = null;
         BufferedReader reader = null;
         try {
             URL url = new URL(params[0]);
-            Log.d("EventSearchService", "URL =       "+url.toString());
             connection = (HttpURLConnection) url.openConnection();
             connection.connect();
             InputStream stream = connection.getInputStream();
@@ -144,6 +152,11 @@ public class EventSearchService extends AsyncTask<String, String, String> {
         return null;
     }
 
+    /**
+     * Loads a new fragment to display search results
+     *
+     * @param s the status of the search
+     */
     @Override
     protected void onPostExecute(String s) {
         super.onPostExecute(s);

@@ -35,7 +35,9 @@ import edu.uw.tcss450.group8.frolicker.R;
 
 
 /**
- * The type Event adapter.
+ * The EventAdapter takes event data from Event objects and puts it into a View
+ *
+ * @author Tim Weaver
  */
 public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHolder> {
 
@@ -52,7 +54,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
      * Instantiates a new Event adapter.
      *
      * @param context       the context
-     * @param eventCardList the event card list
+     * @param eventCardList the list of events
      * @param recyclerView  the recycler view
      */
     public EventAdapter(Context context, List<EventCard> eventCardList, RecyclerView recyclerView) {
@@ -64,7 +66,8 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
 
 
     /**
-     * The type Event view holder.
+     *  A custom ViewHolder that stores event data for binding
+     *  the contents of views.
      */
     class EventViewHolder extends RecyclerView.ViewHolder {
 
@@ -99,10 +102,11 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
     }
 
     /**
+     *  Creates a new ViewHolder to hold Event items
      *
      * @param parent
      * @param viewType
-     * @return
+     * @return a ViewHolder
      */
     @Override
     public EventViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -114,6 +118,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
     }
 
     /**
+     *  Displays event data at specified position
      *
      * @param holder
      * @param position
@@ -122,7 +127,6 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
     public void onBindViewHolder(final EventViewHolder holder, int position) {
 
         currentEventCard = eventCardList.get(position);
-
 
         holder.eventName.setText(currentEventCard.getEventName());
         holder.eventDate.setText(currentEventCard.getEventStart());
@@ -135,8 +139,9 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
     }
 
     /**
+     * Initializes card view expansion.
      *
-     * @param holder
+     * @param holder the Event ViewHolder
      */
     private void setupCardExpander(final EventViewHolder holder) {
 
@@ -159,9 +164,11 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
     }
 
     /**
+     * Starts the Universal Image Loader for loading and displaying
+     * event images.
      *
-     * @param holder
-     * @param imageUrl
+     * @param holder the Event ViewHolder
+     * @param imageUrl the URL of the image
      */
     private void runImageLoader(final EventViewHolder holder, String imageUrl) {
 
@@ -198,8 +205,9 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
     }
 
     /**
+     * Creates a listener for accessing the calendar.
      *
-     * @param holder
+     * @param holder the Event ViewHolder
      */
     private void setupCalendarLoader(final EventViewHolder holder) {
 
@@ -225,7 +233,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
     }
 
     /**
-     *
+     *  Helper method for displaying the Calendar.
      */
     private void launchCalendar() {
 
@@ -260,7 +268,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
     }
 
     /**
-     * Required for setting up the Universal Image loader Library
+     * Helper required for setting up the Universal Image loader Library.
      */
     private void setupImageLoader() {
         // UNIVERSAL IMAGE LOADER SETUP
@@ -280,8 +288,9 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
     }
 
     /**
+     * Gets the number of Events in the data set.
      *
-     * @return
+     * @return the number of stored events
      */
     @Override
     public int getItemCount() {
@@ -294,9 +303,10 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
     }
 
     /**
+     * Gets the row id associated with the Event.
      *
-     * @param position
-     * @return
+     * @param position the position of the Event in the adapter
+     * @return the id of the Event at the specified position
      */
     @Override
     public long getItemId(int position) {

@@ -25,7 +25,10 @@ import edu.uw.tcss450.group8.frolicker.model.EventCard;
 
 
 /**
- * The type Event map fragment.
+ * The EventMapFragment class implements GoogleMaps for displaying events on
+ * a map.
+ *
+ * @author Tim Weaver
  */
 public class EventMapFragment extends Fragment implements OnMapReadyCallback {
 
@@ -72,6 +75,8 @@ public class EventMapFragment extends Fragment implements OnMapReadyCallback {
 
         mGoogleMap = googleMap;
         mGoogleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+
+        // get coordinates for each event to display on map
         for(int i=0; i<eventCardList.size(); i++) {
             lat = Double.parseDouble(eventCardList.get(i).getEventLatitude());
             lng = Double.parseDouble(eventCardList.get(i).getEventLongitude());
@@ -100,10 +105,11 @@ public class EventMapFragment extends Fragment implements OnMapReadyCallback {
     }
 
     /**
-     * Add map icon.
+     * A helper method for adding map icons that represent different
+     * categories of events.
      *
-     * @param id    the id
-     * @param index the index
+     * @param id    the category id
+     * @param index the index of Event
      */
     private void addMapIcon(String id, int index) {
 

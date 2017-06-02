@@ -147,6 +147,9 @@ public class HomeFragment extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * A helper to returns the user to the LoginOrRegister fragment.
+     */
     private void returnToLoginOrRegister() {
         final ProgressDialog progressDialog = new ProgressDialog(getContext());
         progressDialog.setMessage("Logging out...");
@@ -162,6 +165,9 @@ public class HomeFragment extends Fragment {
         }, 1500);
     }
 
+    /**
+     * A helper for loading a new map fragment.
+     */
     private void loadMap() {
         final ProgressDialog progressDialog = new ProgressDialog(getContext());
         progressDialog.setMessage("Loading Map...");

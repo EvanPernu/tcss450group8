@@ -237,30 +237,21 @@ public class EventSearchFragment extends Fragment {
                 CheckedTextView ctv = (CheckedTextView) view;
                 if(ctv.isChecked()){
                     mCategories.add(ctv.getText().toString());
-                    Log.d("CBC add", "mCategories is now"+mCategories);
                 }else{
                     mCategories.remove(ctv.getText().toString());
-                    Log.d("CBC remove", "mCategories is now"+mCategories);
                 }
             }
         });
-
-
-
-
 
         return view;
     }
 
      /**
-      *     selects the proper API request for the user search
+      *  Selects the proper API request for the user search.
       */
     private void searchInit() {
         String event = etEventSearch.getText().toString();
         String location = etLocationSearch.getText().toString();
-        String distance;
-        String sortBy;
-        String startDateKeyword;
         String dialogMessage = "Finding events...";
 
         //if the user has not input any valid search criteria, show a message and return
@@ -298,13 +289,15 @@ public class EventSearchFragment extends Fragment {
             URL.append(location);
         }
 
+        // begin search
         new EventSearchService(getContext(),dialogMessage).execute(URL.toString());
 
 
     }
 
     /**
-     *
+     * A helper method to hide the keyboard from view when the user
+     * clicks the search button.
      */
     private void hideSoftKeyBoard() {
         InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(INPUT_METHOD_SERVICE);
