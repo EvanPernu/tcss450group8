@@ -35,6 +35,8 @@ public class HomeFragment extends Fragment {
     private List<EventCard> eventCardList;
     private TextView mActiveUser;
     private OnFragmentInteractionListener mListener;
+
+    //active username
     private String mUsername;
 
     /**
@@ -194,12 +196,6 @@ public class HomeFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        /**
-         * On home fragment interaction.
-         *
-         * @param n the n
-         */
-// TODO: Update argument type and name
         void onHomeFragmentInteraction(int n);
     }
 

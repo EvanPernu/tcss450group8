@@ -28,7 +28,7 @@ import edu.uw.tcss450.group8.frolicker.views.PrefsInitFragment;
  */
 public class PrefsInitAdapter extends RecyclerView.Adapter<PrefsInitAdapter.Holder>{
 
-    /** This map is equivalent to keywords in PrefList.java
+    /* This map is equivalent to keywords in PrefList.java
      *
      * Key: a list of event categories
      * Value: how interested the user is in the category
@@ -41,10 +41,10 @@ public class PrefsInitAdapter extends RecyclerView.Adapter<PrefsInitAdapter.Hold
      */
     private Map<String, Integer> mMap;
 
-    /** Holds the contents of mMap's keyset. Used to track position/selections.*/
+    /* Holds the contents of mMap's keyset. Used to track position/selections.*/
     private List<String> mKeyList;
 
-    /**A reference to the Fragment this adapter is being used in (for communication to the Fragment)*/
+    /*A reference to the Fragment this adapter is being used in (for communication to the Fragment)*/
     private PrefsInitFragment mParent;
 
     /**

@@ -67,20 +67,24 @@ public class MainActivity extends AppCompatActivity
         GoogleApiClient.OnConnectionFailedListener,
         LocationListener {
 
+    //eventbrite api information
     private static final String EVENTBRITE_URL = "https://www.eventbriteapi.com/v3/events/search/";
     private static final String EVENTBRITE_KEY = "3E3LN6F6HUADRFXTS74Y";
     private final String DB_URL = "http://cssgate.insttech.washington.edu/~_450agrp8/";
+
+    //name of active user
     private String ACTIVE_USER;
 
+    //location of web service scripts
     private static final String PARTIAL_LOGIN_URL = "http://cssgate.insttech.washington.edu/"
             + "~_450agrp8/feedback";
 
+    //google api information
     private GoogleApiClient mGoogleApiClient;
     private static final String DEFUALT_SEARCH_RADIUS = "10mi";
     private static final String PREFS_NAME = "REMEMBERED_USER";
     private static String GET_USERNAME = "SAVED_USER";
     private static String GET_PASSWORD = "SAVED_PASSWORD";
-
     public static final long UPDATE_INTERVAL_IN_MILLISECONDS = 10000;
     public static final long FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS = UPDATE_INTERVAL_IN_MILLISECONDS / 2;
     private static final int MY_PERMISSIONS_LOCATIONS = 814;
@@ -774,6 +778,7 @@ public class MainActivity extends AppCompatActivity
 
     /**
      * helper method that converts EventBrite category names to their corresponding ID numbers.
+     *
      * @param categoryList a List of category names
      * @return a list of corresponding ID numbers
      */

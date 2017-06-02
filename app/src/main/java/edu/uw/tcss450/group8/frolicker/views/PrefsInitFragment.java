@@ -29,7 +29,6 @@ import edu.uw.tcss450.group8.frolicker.model.PrefsInitAdapter;
  * once upon a user's initial registration.
  *
  * @author Evan Pernu
- * @version 5 /2/2017
  */
 public class PrefsInitFragment extends Fragment {
 
@@ -120,8 +119,8 @@ public class PrefsInitFragment extends Fragment {
         /**
          * On prefs init fragment interaction.
          *
-         * @param s           the s
-         * @param theJSString the the js string
+         * @param s           the desired action
+         * @param theJSString a jsonobject string
          */
         void onPrefsInitFragmentInteraction(String s, String theJSString);
     }

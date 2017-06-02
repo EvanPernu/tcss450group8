@@ -39,77 +39,41 @@ import static android.content.Context.INPUT_METHOD_SERVICE;
  */
 public class EventSearchFragment extends Fragment {
 
-    // EvenBrite url
+    // EvenBrite information
     private static final String EVENTBRITE_URL = "https://www.eventbriteapi.com/v3/events/search/";
-
-    /**
-     * EventBrite API key
-     */
     private static final String EVENTBRITE_KEY = "3E3LN6F6HUADRFXTS74Y";
 
-    /**
-     * minimum search distance in miles
-     */
+    //minimum search distance in miles
     private static final int MIN_SEARCH_DISTANCE = 1;
 
-    /**
-     * The field a user types keyword parameters into
-     */
+    //references to UI elements
     private EditText etEventSearch;
-
-    /**
-     * The field a user types location parameters into
-     */
     private EditText etLocationSearch;
-
-    /**
-     * Pressing this button commences a search
-     */
     private Button searchButton;
-
-    /**
-     * This bar determines the search distance
-     */
     private SeekBar distanceBar;
-
-    /**
-     * Displays search distance to user
-     */
     private TextView distanceTxt;
-
-    /**
-     * Displays a list of sorting options
-     */
     private Spinner orderSpinner;
-
-    /**
-     * Displays a list of categories to search by
-     */
     private ListView categoriesList;
-
-    /**
-     * Expands search options
-     */
     private Button expandButton;
 
-    /**
+    /*
      * The search distance in miles.
      * default = 10.
      * this value needs to match fragment_event_search.xml -> barSearchDistance -> android:progress
      */
     private int mDistance = 10;
 
-    /**
+    /*
      * This determines the order results are displayed in
      */
     private String mOrder = "Date(soonest)";
 
-    /**
+    /*
      * This stores the user's current location in EventBrite URL format
      */
     private String mCurrentLocation = "";
 
-    /**
+    /*
      * Stores currently selected categories
      */
     private ArrayList<String> mCategories;
