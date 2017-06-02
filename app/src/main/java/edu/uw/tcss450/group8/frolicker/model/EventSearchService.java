@@ -34,7 +34,6 @@ public class EventSearchService extends AsyncTask<String, String, String> {
     private String dialogMessage;
     private Context context;
 
-
     /**
      * Instantiates a new Event search service.
      *

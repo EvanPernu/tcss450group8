@@ -26,7 +26,6 @@ public class EventCard {
      * Instantiates a new Event card.
      */
     public EventCard() {
-
     }
 
 
@@ -56,7 +55,6 @@ public class EventCard {
     public String getEventDescription() {
         return eventDescription;
     }
-
 
     /**
      * Gets event name.
@@ -138,7 +136,6 @@ public class EventCard {
      */
     public String getFullAddress() {
         return eventStreetAddress + ", " + eventCity;
-
     }
 
     /**

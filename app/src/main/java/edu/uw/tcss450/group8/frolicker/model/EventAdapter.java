@@ -41,14 +41,12 @@ import edu.uw.tcss450.group8.frolicker.R;
  */
 public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHolder> {
 
-
     private List<EventCard> eventCardList;
     private LayoutInflater inflater;
     private Context context;
     private int mExpandedPosition = -1;
     private RecyclerView recyclerView;
     private EventCard currentEventCard;
-
 
     /**
      * Instantiates a new Event adapter.
@@ -64,13 +62,11 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
         this.recyclerView = recyclerView;
     }
 
-
     /**
      *  A custom ViewHolder that stores event data for binding
      *  the contents of views.
      */
     class EventViewHolder extends RecyclerView.ViewHolder {
-
 
         private TextView eventName;
         private TextView eventDate;
@@ -80,7 +76,6 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
         private ImageView eventImage;
         private ProgressBar progressBar;
         private LinearLayout llExpandArea;
-
 
         /**
          * Instantiates a new Event view holder.
@@ -229,7 +224,6 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
                 return false;
             }
         });
-
     }
 
     /**
@@ -312,6 +306,4 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
     public long getItemId(int position) {
         return position;
     }
-
-
 }
