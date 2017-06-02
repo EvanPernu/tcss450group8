@@ -5,6 +5,7 @@
     android:layout_height="match_parent"
     tools:context="edu.uw.tcss450.group8.frolicker.views.PrefsInitFragment">
 
+
     <TextView
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -23,6 +24,7 @@
         tools:layout_constraintTop_creator="1"
         app:layout_constraintHorizontal_bias="0.0"
         android:id="@+id/prefsInitTextView" />
+
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerView"
