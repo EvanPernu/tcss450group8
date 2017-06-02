@@ -77,14 +77,6 @@
             android:background="@color/cardColor"
             android:src="@drawable/info3" />
 
-        <!--<ImageView-->
-        <!--android:id="@+id/imageButton3"-->
-        <!--android:layout_width="19dp"-->
-        <!--android:layout_height="19dp"-->
-        <!--android:layout_alignParentRight="true"-->
-        <!--android:layout_below="@+id/imageButton2"-->
-        <!--android:src="@drawable/reminder2" />-->
-
 
         <LinearLayout
             android:id="@+id/llCardBack"

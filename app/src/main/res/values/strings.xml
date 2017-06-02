@@ -28,6 +28,8 @@
     <string name="logout">Logout</string>
     <string name="map_view">Map View</string>
     <string name="new_search">New Search</string>
+    <string name="search_for_events">Search for Events</string>
+    <string name="cityOrzip">City or Zip</string>
 
 
     <string-array name="search_order_options_array">
