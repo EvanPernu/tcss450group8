@@ -1,7 +1,13 @@
 package edu.uw.tcss450.group8.frolicker.model;
 
+import android.util.Log;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -42,25 +48,26 @@ public class PrefList implements Serializable{
     }
 
 
-//    /**
-//     * Converts a JSONObject of PrefList format into an object of type PrefList
-//     *
-//     * @param other a JSONObject of PrefList format
-//     * @return an object of type PrefList
-//     * @throws JSONException
-//     */
-//    public PrefList JSONFactory(JSONObject other) throws JSONException {
-//        PrefList result = new PrefList();
-//
-//        //add each key pair to result's internal map
-//        Iterator<String> keys = other.keys();
-//        while(keys.hasNext()){
-//            String key = keys.next();
-//            result.addKey(key, other.getInt(key));
-//        }
-//
-//        return result;
-//    }
+    /**
+     * Converts a JSONObject of PrefList format into an object of type PrefList
+     *
+     * @param other a JSONObject of PrefList format
+     * @return an object of type PrefList
+     * @throws JSONException
+     */
+    public static PrefList JSONFactory(JSONObject other) throws JSONException {
+        PrefList result = new PrefList();
+
+        //add each key pair to result's internal map
+        Iterator<String> keys = other.keys();
+        while(keys.hasNext()){
+            String key = keys.next();
+            result.addKey(Integer.valueOf(key), other.getInt(key));
+        }
+
+        Log.d("preflist factory", "result.mKeywords = " + result.mKeywords);
+        return result;
+    }
 
     /**
      * Adds the given String/int pair to the internal map
@@ -83,5 +90,27 @@ public class PrefList implements Serializable{
             result.put(key, mKeywords.get(key));
         }
         return result;
+    }
+
+    /**
+     * Returns EventBrite formatted URL string containing only the categories with a score of 1
+     *
+     * @return An EventBrite formatted URL string containing only the categories with a score of 1
+     */
+    public String getPreferredString(){
+        if(mKeywords.keySet().isEmpty()){
+            return "";
+        }
+
+        String res = "";
+
+        for(Integer i : mKeywords.keySet()){
+            if(mKeywords.get(i) == 1){
+                res+=i+",";
+            }
+        }
+
+        //truncate the last character because it will be an unnecessary comma (fencepost fix)
+        return res.substring(0,res.length()-1);
     }
 }

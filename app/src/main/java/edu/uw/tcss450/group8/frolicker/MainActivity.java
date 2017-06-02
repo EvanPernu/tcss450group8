@@ -20,11 +20,15 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -40,6 +44,7 @@ import java.util.Map;
 
 import edu.uw.tcss450.group8.frolicker.model.EventCard;
 import edu.uw.tcss450.group8.frolicker.model.EventSearchService;
+import edu.uw.tcss450.group8.frolicker.model.PrefList;
 import edu.uw.tcss450.group8.frolicker.views.EventMapFragment;
 import edu.uw.tcss450.group8.frolicker.views.EventSearchFragment;
 import edu.uw.tcss450.group8.frolicker.views.HomeFragment;
@@ -70,14 +75,17 @@ public class MainActivity extends AppCompatActivity
     //eventbrite api information
     private static final String EVENTBRITE_URL = "https://www.eventbriteapi.com/v3/events/search/";
     private static final String EVENTBRITE_KEY = "3E3LN6F6HUADRFXTS74Y";
-    private final String DB_URL = "http://cssgate.insttech.washington.edu/~_450agrp8/";
+
 
     //name of active user
     private String ACTIVE_USER;
 
     //location of web service scripts
+    //login
     private static final String PARTIAL_LOGIN_URL = "http://cssgate.insttech.washington.edu/"
             + "~_450agrp8/feedback";
+    //database
+    private final String DB_URL = "http://cssgate.insttech.washington.edu/~_450agrp8/";
 
     //google api information
     private GoogleApiClient mGoogleApiClient;
@@ -92,6 +100,8 @@ public class MainActivity extends AppCompatActivity
     private Location mCurrentLocation;
     private Context context = this;
 
+    //stores the active user's event prefs in JSON format
+    private String mEventPrefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -126,6 +136,8 @@ public class MainActivity extends AppCompatActivity
                         .commit();
             }
         }
+
+        mEventPrefs = "";
     }
 
     protected void startLocationUpdates() {
@@ -237,10 +249,7 @@ public class MainActivity extends AppCompatActivity
             uploadInitPrefsTask task = new uploadInitPrefsTask();
             task.execute(ACTIVE_USER, theJSString);
 
-            Log.d("main/upload", "about to log in");
-
             // automatic search for events near current location when logging in
-            Log.d("yah", "onPrefsInitFragmentInteraction: gag" + mCurrentLocation);
             new EventSearchService(context, "Finding events...").execute(EVENTBRITE_URL + "?location.latitude="
                     + String.valueOf(mCurrentLocation.getLatitude()) + "&location.longitude="
                     + String.valueOf(mCurrentLocation.getLongitude()) + "&token="
@@ -718,16 +727,10 @@ public class MainActivity extends AppCompatActivity
                 //set active user
                 ACTIVE_USER = mUsername;
 
-
                 // automatically search for events near current location when logging in
-
-                //TODO add liked categories as a parameter, and a random # of maybe categories
-
-
-                new EventSearchService(context, "Finding events...").execute(EVENTBRITE_URL + "?location.latitude="
-                        + String.valueOf(mCurrentLocation.getLatitude()) + "&location.longitude="
-                        + String.valueOf(mCurrentLocation.getLongitude()) + "&location.within=" + DEFUALT_SEARCH_RADIUS + "&token="
-                        + EVENTBRITE_KEY + "&expand=venue");
+                SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+                GetPrefsWebServiceTask task = new GetPrefsWebServiceTask();
+                task.execute(DB_URL, settings.getString(GET_USERNAME, ""));
 
             } else if (result.equals("fail")) {
                 //unsuccessful login
@@ -738,6 +741,95 @@ public class MainActivity extends AppCompatActivity
                 //clear any incorrect stuff
                 editor.remove(GET_USERNAME);
                 editor.remove(GET_PASSWORD);
+            }
+        }
+    }
+
+    /**
+     * Asynctask that fetches the active user's prefs,
+     * and opens a home fragment with a corresponding search
+     *
+     * @author Evan Pernu
+     */
+    class GetPrefsWebServiceTask extends AsyncTask<String, Void, String> {
+        private final String SERVICE = "getPrefs.php";
+        private ProgressDialog pDialog;
+        private String mUsername;
+
+        public GetPrefsWebServiceTask() {
+
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pDialog = new ProgressDialog(context);
+            pDialog.setMessage("Getting your preferences...");
+            pDialog.setIndeterminate(false);
+            pDialog.setCancelable(true);
+            pDialog.show();
+        }
+
+        @Override
+        protected String doInBackground(String... strings) {
+
+            if (strings.length != 2) {
+                throw new IllegalArgumentException("Two String arguments required.");
+            }
+
+            String response = "";
+            HttpURLConnection urlConnection = null;
+            String url = strings[0];
+
+            //set the active username it knows who to log in later
+            mUsername = strings[1];
+
+            try {
+                URL urlObject = new URL(url + SERVICE + "?my_u="+mUsername);
+
+                urlConnection = (HttpURLConnection) urlObject.openConnection();
+
+                InputStream content = urlConnection.getInputStream();
+                BufferedReader buffer = new BufferedReader(new InputStreamReader(content));
+                String s = "";
+                while ((s = buffer.readLine()) != null) {
+                    response += s;
+                }
+            } catch (Exception e) {
+                response = "Unable to connect, Reason: " + e.getMessage();
+            } finally {
+                if (urlConnection != null) urlConnection.disconnect();
+            }
+
+            //Log.d("getPrefs", "Finished. reponse = " + response);
+
+            return response;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            if (pDialog.isShowing()) {
+                pDialog.dismiss();
+            }
+            // Something wrong with the network or the URL.
+            if (result.startsWith("Unable to")) {
+                Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG).show();
+                return;
+            }else{
+
+                PrefList mEvents = new PrefList();
+                //make an object of type PrefList with the prefs data
+                try {
+                    mEvents = PrefList.JSONFactory(new JSONObject(result));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                //search for events that positively match the user's prefs
+                new EventSearchService(context, "Finding events...").execute(EVENTBRITE_URL + "?location.latitude="
+                        + String.valueOf(mCurrentLocation.getLatitude()) + "&location.longitude="
+                        + String.valueOf(mCurrentLocation.getLongitude()) + "&location.within=" + DEFUALT_SEARCH_RADIUS + "&token="
+                        + EVENTBRITE_KEY + "&expand=venue"+"&categories="+mEvents.getPreferredString());
             }
         }
     }
